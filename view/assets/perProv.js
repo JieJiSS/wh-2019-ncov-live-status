@@ -82,8 +82,8 @@ function perProv(chart) {
 				},
 				tooltip: {
 					formatter: function(params) {
-						console.log(params);
-						var value = rawData.filter((o) => o.type === 'prov' && o.name === params.name)[0]._desc;
+						var prov = rawData.filter((o) => o.type === 'prov' && o.name === params.name)[0] || {};
+						var value = prov._desc || "暂无数据";
 						return params.name + ': ' + value;
 					}
 				}
