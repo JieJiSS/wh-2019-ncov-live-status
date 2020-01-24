@@ -43,7 +43,6 @@ function has(name) {
 
 function upd(name, value, ttl) {
   if(!has(name)) {
-    console.warn("[WARN]", `"${name}" isn't found in cache. Will call add(...) instead.`);
     return add(name, value, ttl);
   }
 
