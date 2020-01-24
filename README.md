@@ -8,6 +8,8 @@ Responsive, using `Echarts.js`.
 ## Install
 
 ```shell
+$ git clone https://github.com/JieJiSS/wh-2019-ncov-live-status
+$ cd wh-2019-ncov-live-status
 $ yarn install
 $ touch config.json
 ```
