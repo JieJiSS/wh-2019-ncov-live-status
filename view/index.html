@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>疫情地图</title>
+  <script src="https://cdnjs.jiejiss.com/ajax/libs/echarts/4.6.0/echarts.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.6.0/extension/bmap.min.js"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak="></script>
+  <script src="/view/assets/perCity.js"></script>
+  <script src="/view/assets/perProv.js"></script>
+  <style>
+    pre {
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      word-wrap: break-word;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="city" style="height: 700px; width: 1024px;"></div>
+  <div style="height: 40px;"></div>
+  <div id="prov" style="height: 700px; width: 1024px;"></div>
+  <div style="height: 40px;"></div>
+  <div style="word-wrap: break-word; white-space: normal; width: 800px;">
+    <pre style="font-weight: bold;">疫情新闻速递：</pre>
+    <pre id="news"></pre>
+  </div>
+  
+  <script id="rawData"></script>
+  <script id="allNews"></script>
+  <script>
+    var rawData = [], allNews = [];
+    function update() {
+      rawData = [];
+      allNews = [];
+      document.body.removeChild(document.getElementById("rawData"));
+      var dataNode = document.createElement("script");
+      dataNode.id = "rawData";
+      dataNode.src = "/api/patients-jsonp.js?t=" + Date.now();
+      document.body.appendChild(dataNode);
+
+      document.body.removeChild(document.getElementById("allNews"));
+      var newsNode = document.createElement("script");
+      newsNode.id = "allNews";
+      newsNode.src = "/api/news-jsonp.js?t=" + Date.now();
+      document.body.appendChild(newsNode);
+
+      var cityChart = echarts.init(document.getElementById("city"));
+      var provChart = echarts.init(document.getElementById("prov"));
+      var dataTimerId = setInterval(() => {
+        if(rawData.length === 0) return;
+        perCity(cityChart);
+        perProv(provChart);
+        clearInterval(dataTimerId);
+      }, 200);
+
+      var newsTimerId = setInterval(() => {
+        if(allNews.length === 0) return;
+        writeNews();
+        clearInterval(newsTimerId);
+      }, 200);
+    }
+
+    update();
+    setInterval(update, 5 * 60 * 1000);
+
+    function writeNews() {
+      var node = document.getElementById("news");
+      node.innerText = allNews.join("\n".repeat(6));
+    }
+  </script>
+</body>
+</html>
