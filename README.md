@@ -1,6 +1,6 @@
-# wh-2019-nCoV-live-status
+# wh-2019-ncov-live-status
 
-Responsive, using `Echarts.js`.
+Responsive, using `ECharts.js`.
 
 ![province-level.jpg](https://i.loli.net/2020/01/24/D9ms6r8aQbRV1MX.jpg)
 ![city-level.jpg](https://i.loli.net/2020/01/24/jB7yw2atcqHMCvD.jpg)
