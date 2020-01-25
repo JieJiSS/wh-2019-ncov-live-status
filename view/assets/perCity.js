@@ -1,5 +1,5 @@
 function perCity(chart) {
-	var data = rawData.filter(o => o.type === 'city').map((o) => {
+	var data = rawData.filter((o) => o.type === 'city').map((o) => {
 		o.value = o.confirmed;
 		return o;
 	});
@@ -2370,61 +2370,72 @@ function perCity(chart) {
 		通州: [ 116.662263, 39.916019 ],
 		石景山: [ 116.227312, 39.912239 ],
 		仙桃: [ 113.387448, 30.293966 ],
-		重庆: [106.556712,29.568493],
+		重庆: [ 106.556712, 29.568493 ],
+		天门: [ 113.172984, 30.669621 ],
+		巩义: [ 113.029578, 34.753623 ],
+		儋州: [ 109.58861, 19.52769 ],
+		丽江: [ 100.234762, 26.85911 ]
 	};
 
 	var expo = 0.24;
 	var rate = 1800;
 
 	var wtf = false;
-	var chongqingVal = 0, beijingVal = 0;
+	var chongqingVal = 0,
+		beijingVal = 0;
 
 	var convertData = function(data) {
 		var res = [];
 
 		// I hate this part
 		for (var i = 0; i < data.length; i++) {
-			if(['万州区', '九龙坡区', '巫山县', '大渡口区', '渝北区', '两江新区', '璧山区', '开州区', '重庆', '重庆市'].includes(data[i].name)) {
-				console.log(data[i].name);
-				if(rawData.filter(o => o.name === "重庆").length === 0) {
+			if ([ '万州区', '九龙坡区', '巫山县', '大渡口区', '渝北区', '两江新区', '璧山区', '开州区', '重庆', '重庆市' ].includes(data[i].name)) {
+				if (rawData.filter((o) => o.name === '重庆').length === 0) {
 					rawData.push({
-						type: "city",
+						type: 'city',
 						manual: true,
-						name: "重庆",
+						name: '重庆',
 						confirmed: data[i].confirmed,
 						cured: data[i].cured,
 						dead: data[i].dead,
 						suspect: data[i].suspect,
 						get _desc() {
-							return `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
+							return (
+								`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+								this._actualDesc
+							);
 						},
 						value: data[i].value,
-						_actualDesc: ""
+						_actualDesc: ''
 					});
 				} else {
-					for(var j = 0; j < rawData.length; j++) {
-						if(rawData[j].name === "重庆") {
-							if(!rawData[j].manual) {
+					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].name === '重庆') {
+							if (!rawData[j].manual) {
 								rawData[j] = {
-									type: "city",
+									type: 'city',
 									manual: true,
-									name: "重庆",
+									name: '重庆',
 									confirmed: rawData[j].confirmed,
 									cured: rawData[j].cured,
 									dead: rawData[j].dead,
 									suspect: rawData[j].suspect,
 									get _desc() {
-										return `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
+										return (
+											`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this
+												.dead} 例。` + this._actualDesc
+										);
 									},
 									value: rawData[j].value,
-									_actualDesc: ""
+									_actualDesc: ''
 								};
 							}
 							rawData[j].confirmed += data[i].confirmed;
 							rawData[j].cured += data[i].cured;
-							rawData[j].dead +=  data[i].dead;
+							rawData[j].dead += data[i].dead;
 							rawData[j].suspect += data[i].suspect;
-							rawData[j]._actualDesc += '<div style="padding-left: 1em;">' + data[i].name + ": " + data[i]._desc + "</div>";
+							rawData[j]._actualDesc +=
+								'<div style="padding-left: 1em;">' + data[i].name + ': ' + data[i]._desc + '</div>';
 							rawData[j].value += data[i].value;
 							break;
 						}
@@ -2437,47 +2448,73 @@ function perCity(chart) {
 				wtf = true;
 				data[i].name = '朝阳区';
 			}
-			if(['昌平', '大兴', '通州', '东城', '西城', '海淀', '朝阳区', '外地来京人员', '石景山', '丰台', '顺义', '房山', '门头沟', '平谷', '密云', '怀柔', '延庆'].includes(data[i].name)) {
-				if(rawData.filter(o => o.name === "北京").length === 0) {
+			if (
+				[
+					'昌平',
+					'大兴',
+					'通州',
+					'东城',
+					'西城',
+					'海淀',
+					'朝阳区',
+					'外地来京人员',
+					'石景山',
+					'丰台',
+					'顺义',
+					'房山',
+					'门头沟',
+					'平谷',
+					'密云',
+					'怀柔',
+					'延庆'
+				].includes(data[i].name)
+			) {
+				if (rawData.filter((o) => o.name === '北京').length === 0) {
 					rawData.push({
-						type: "city",
-						name: "北京",
+						type: 'city',
+						name: '北京',
 						manual: true,
 						confirmed: data[i].confirmed,
 						cured: data[i].cured,
 						dead: data[i].dead,
 						suspect: data[i].suspect,
 						get _desc() {
-							console.log("getter");
-							return `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
+							return (
+								`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+								this._actualDesc
+							);
 						},
 						value: data[i].value,
-						_actualDesc: ""
+						_actualDesc: ''
 					});
 				} else {
-					for(var j = 0; j < rawData.length; j++) {
-						if(rawData[j].name === "北京") {
-							if(!rawData[j].manual) {
+					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].name === '北京') {
+							if (!rawData[j].manual) {
 								rawData[j] = {
-									type: "city",
+									type: 'city',
 									manual: true,
-									name: "北京",
+									name: '北京',
 									confirmed: rawData[j].confirmed,
 									cured: rawData[j].cured,
 									dead: rawData[j].dead,
 									suspect: rawData[j].suspect,
 									get _desc() {
-										return `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
+										return (
+											`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this
+												.dead} 例。` + this._actualDesc
+										);
 									},
 									value: rawData[j].value,
-									_actualDesc: ""
+									_actualDesc: ''
 								};
 							}
 							rawData[j].confirmed += data[i].confirmed;
 							rawData[j].cured += data[i].cured;
-							rawData[j].dead +=  data[i].dead;
+							rawData[j].dead += data[i].dead;
 							rawData[j].suspect += data[i].suspect;
-							rawData[j]._actualDesc += '<div style="padding-left: 1em;">' + data[i].name + ": " + data[i]._desc + "</div>";
+							rawData[j]._actualDesc +=
+								'<div style="padding-left: 1em;">' + data[i].name + ': ' + data[i]._desc + '</div>';
 							rawData[j].value += data[i].value;
 							break;
 						}
@@ -2487,7 +2524,7 @@ function perCity(chart) {
 				continue;
 			}
 			var geoCoord = geoCoordMap[data[i].name];
-			if (!geoCoord && (data[i].name.endsWith('县') || data[i].name.endsWith('区'))) {
+			if (!geoCoord && /[市县区]$/.test(data[i].name)) {
 				geoCoord = geoCoordMap[data[i].name.slice(0, -1)];
 			}
 			if (geoCoord) {
