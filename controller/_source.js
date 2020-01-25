@@ -1,6 +1,6 @@
 // @ts-check
 
-const fetch = require("node-fetch");  // to make linter works
+const fetch = require("node-fetch");
 
 const cache = require("./_cache");
 
@@ -11,10 +11,17 @@ async function sourceHTML() {
     return cache.get("html");
   }
 
-  const html = await (fetch(CTX).then(res => res.text()));
-  cache.add("html", html, 5 * 60 * 1000);
+  let html;
+  try {
+    html = await (fetch(CTX, {}).then(res => res.text()));
+    cache.add("html", html, 5 * 60 * 1000);
+  } catch (err) {
+    if(err.name !== "FetchError") {
+      console.error("_source.js failed:", err.name, err.message, err.stack);
+    };
+  }
 
-  return html;
+  return html || await sourceHTML();
 }
 
 module.exports = sourceHTML;
