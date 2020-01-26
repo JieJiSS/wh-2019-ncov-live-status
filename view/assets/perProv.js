@@ -11678,7 +11678,7 @@ echarts.registerMap('China', {
 			type: 'Feature',
 			properties: {
 				adcode: 810000,
-				name: '香港特别行政区',
+				name: '香港',
 				center: [ 114.173355, 22.320048 ],
 				centroid: [ 114.134394, 22.377371 ],
 				childrenNum: 18,
@@ -11757,7 +11757,7 @@ echarts.registerMap('China', {
 			type: 'Feature',
 			properties: {
 				adcode: 820000,
-				name: '澳门特别行政区',
+				name: '澳门',
 				center: [ 113.54909, 22.198951 ],
 				centroid: [ 113.56642, 22.159262 ],
 				childrenNum: 8,
