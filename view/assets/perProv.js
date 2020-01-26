@@ -11537,7 +11537,7 @@ echarts.registerMap('China', {
 			type: 'Feature',
 			properties: {
 				adcode: 710000,
-				name: '台湾省',
+				name: '台湾地区',
 				center: [ 121.509062, 25.044332 ],
 				centroid: [ 120.971486, 23.749452 ],
 				childrenNum: 0,
@@ -12148,7 +12148,7 @@ function perProv(chart) {
 			inRange: {
 				color: [ '#fffdfd', '#d01111' ]
 			},
-			show: true
+			show: false
 		},
 		geo: {
 			map: 'China',
@@ -12184,11 +12184,6 @@ function perProv(chart) {
 				geoIndex: 0,
 				map: 'China',
 				data: data,
-				label: {
-					formatter: '{b}',
-					position: 'right',
-					show: true
-				},
 				itemStyle: {
 					color: '#ee3333',
 					borderWidth: 1,
@@ -12203,7 +12198,22 @@ function perProv(chart) {
 					formatter: function(params) {
 						var prov = rawData.filter((o) => o.type === 'prov' && o.name === params.name)[0] || {};
 						var desc = prov._desc || '暂无数据';
-						return params.name + ': ' + desc;
+						var name = params.name;
+						if(name === '台湾省') {
+							name = '台湾地区';
+						}
+						if(window.isMobile) {
+							var result = name + ': <br />';
+							if(desc === '暂无数据') {
+								return result + desc;
+							}
+							result += '确诊 ' + prov.confirmed + ' 例，<br />';
+							result += '疑似 ' + prov.suspect   + ' 例，<br />';
+							result += '治愈 ' + prov.cured     + ' 例，<br />';
+							result += '死亡 ' + prov.dead      + ' 例。<br />';
+							return result;
+						}
+						return name + ': ' + desc;
 					}
 				}
 			}

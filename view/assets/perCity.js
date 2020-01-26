@@ -2723,7 +2723,7 @@ function perCity(chart) {
 				}
 			},
 			{
-				name: 'Top 8',
+				name: 'Top 10',
 				type: 'effectScatter',
 				coordinateSystem: 'bmap',
 				data: convertData(
@@ -2731,7 +2731,7 @@ function perCity(chart) {
 						.sort(function(a, b) {
 							return b.value - a.value;
 						})
-						.slice(0, 9)
+						.slice(0, 10)
 				),
 				symbolSize: function(val) {
 					return Math.pow(rate * (val[2] - 1), expo);
