@@ -11,6 +11,8 @@ const news = require("./controller/news");
 
 const app = express();
 
+console.log("pid:", process.pid);
+
 app.get("/", async (_, res) => {
   res.set("Content-Type", "text/html");
   res.send(
