@@ -2384,7 +2384,8 @@ function perCity(chart) {
 
 	var wtf = false;
 	var chongqingVal = 0,
-		beijingVal = 0;
+		beijingVal = 0,
+		tianjinVal = 0;
 
 	var convertData = function(data) {
 		var res = [];
@@ -2525,6 +2526,61 @@ function perCity(chart) {
 				beijingVal += data[i].value;
 				continue;
 			}
+			if ([ '河北区', '河东区', '外地来津', '滨海新区', '南开区', '西青区', '天津市', '天津' ].includes(data[i].name)) {
+				if (rawData.filter((o) => o.name === '天津').length === 0) {
+					rawData.push({
+						type: 'city',
+						manual: true,
+						name: '天津',
+						confirmed: data[i].confirmed,
+						cured: data[i].cured,
+						dead: data[i].dead,
+						suspect: data[i].suspect,
+						get _desc() {
+							return (
+								`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+								this._actualDesc
+							);
+						},
+						value: data[i].value,
+						_actualDesc: ''
+					});
+				} else {
+					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].name === '天津') {
+							if (!rawData[j].manual) {
+								rawData[j] = {
+									type: 'city',
+									manual: true,
+									name: '天津',
+									confirmed: rawData[j].confirmed,
+									cured: rawData[j].cured,
+									dead: rawData[j].dead,
+									suspect: rawData[j].suspect,
+									get _desc() {
+										return (
+											`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this
+												.dead} 例。` + this._actualDesc
+										);
+									},
+									value: rawData[j].value,
+									_actualDesc: ''
+								};
+							}
+							rawData[j].confirmed += data[i].confirmed;
+							rawData[j].cured += data[i].cured;
+							rawData[j].dead += data[i].dead;
+							rawData[j].suspect += data[i].suspect;
+							rawData[j]._actualDesc +=
+								'<div style="padding-left: 1em;">' + data[i].name + ': ' + data[i]._desc + '</div>';
+							rawData[j].value += data[i].value;
+							break;
+						}
+					}
+				}
+				tianjinVal += data[i].value;
+				continue;
+			}
 			data[i].name = data[i].name.replace('自治', '');
 			var geoCoord = geoCoordMap[data[i].name];
 			if (!geoCoord && /[市县区]$/.test(data[i].name)) {
@@ -2543,6 +2599,11 @@ function perCity(chart) {
 		res.push({
 			name: '重庆',
 			value: [ geoCoord[0], geoCoord[1], chongqingVal ]
+		});
+		geoCoord = geoCoordMap['天津'];
+		res.push({
+			name: '天津',
+			value: [ geoCoord[0], geoCoord[1], tianjinVal ]
 		});
 		geoCoord = geoCoordMap['北京'];
 		res.push({
