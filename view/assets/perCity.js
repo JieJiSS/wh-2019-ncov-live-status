@@ -2564,7 +2564,7 @@ function perCity(chart) {
 		bmap: {
 			center: [ 104.114129, 36.550339 ],
 			zoom: 5,
-			roam: false,
+			roam: window.isMobile,
 			mapStyle: {
 				styleJson: [
 					{
@@ -2708,8 +2708,17 @@ function perCity(chart) {
 				},
 				tooltip: {
 					formatter: function(params) {
-						var value = rawData.filter((o) => o.type === 'city' && o.name === params.name)[0]._desc;
-						return params.name + ': ' + value;
+						var obj = rawData.filter((o) => o.type === 'city' && o.name === params.name)[0];
+						var desc = obj._desc;
+						if(window.isMobile) {
+							var result = params.name + ': <br />';
+							result += '确诊 ' + obj.confirmed + ' 例，<br />';
+							result += '疑似 ' + obj.suspect   + ' 例，<br />';
+							result += '治愈 ' + obj.cured     + ' 例，<br />';
+							result += '死亡 ' + obj.dead      + ' 例。<br />';
+							return result;
+						}
+						return params.name + ': ' + desc;
 					}
 				}
 			},

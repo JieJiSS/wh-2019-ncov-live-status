@@ -30,6 +30,7 @@
     <pre id="news"></pre>
   </div>
   <script>
+    window.isMobile = false;
     function $_(id) { return document.getElementById(id); }
     if(window.innerHeight > window.innerWidth) {
       $_("city").style.height = "45vh";
@@ -38,6 +39,7 @@
       $_("prov").style.width = "99vw";
       $_("news-wrap").style.fontSize = "1.1em";
       $_("news-wrap").style.width = "99vw";
+      window.isMobile = true;
     }
   </script>
   
