@@ -16,7 +16,7 @@ async function sourceHTML() {
   if(fetching) {
     // avoid fetching repeatedly.
     while(fetching) {
-      await sleep(100);
+      await sleep(50);
     }
     return cache.get("html");
   }
