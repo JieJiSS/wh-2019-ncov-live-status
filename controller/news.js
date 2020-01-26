@@ -52,7 +52,7 @@ function generateLink(url) {
   let result = "";
   for(let i = 0; i < links.length; i++) {
     const link = links[i];
-    result += `<a href="${encodeURI(link)}">${safeHTML(link)}</a>\n`;
+    result += `<a href="${encodeURI(link)}" target="_blank">${safeHTML(link)}</a>\n`;
   }
   return result.trim();
 }
