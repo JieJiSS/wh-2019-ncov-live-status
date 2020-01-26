@@ -21,6 +21,7 @@
 </head>
 <body>
   <pre style="margin: 0 0 1px 0; color: #ccc;">@jiejiss <a href="https://github.com/JieJiSS/wh-2019-ncov-live-status">view code on GitHub</a></pre>
+  <div id="loading"><pre>Loading...<br />This may take several seconds.</pre></div>
   <div id="city" style="width: 90vw; height: 90vh;"></div>
   <div style="height: 2%;"></div>
   <div id="prov" style="width: 90vw; height: 90vh;"></div>
@@ -68,6 +69,7 @@
         if(rawData.length === 0) return;
         perCity(cityChart);
         perProv(provChart);
+        $_("loading").innerText = "";
         clearInterval(dataTimerId);
       }, 200);
 
