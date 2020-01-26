@@ -39,10 +39,26 @@ async function generateDescription(post) {
   const status = await getStatusByProvId(post.provinceId) || "";
   if(!status) post.provinceName = "海外内容，无统计数据。";
 
-  let result = `${post.title}\n${post.infoSource} published at ${publishTime}\n\n${post.summary}`;
-  result += `\n\n相关信息：${post.provinceName} ${status}\n内容来源：${post.sourceUrl}`;
+  let result = `${safeHTML(post.title)}\n${safeHTML(post.infoSource)} published at ${publishTime}`;
+  result += `\n\n${safeHTML(post.summary)}\n\n相关信息：${safeHTML(post.provinceName)} `;
+  result += `${safeHTML(status)}\n内容来源：${generateLink(post.sourceUrl)}`;
 
   return result;
+}
+
+function generateLink(url) {
+  // remove duplicate links
+  const links = Array.from(new Set(url.trim().split(/[\n\u200b]/).map(u => u.trim())));
+  let result = "";
+  for(let i = 0; i < links.length; i++) {
+    const link = links[i];
+    result += `<a href="${encodeURI(link)}">${safeHTML(link)}</a>\n`;
+  }
+  return result.trim();
+}
+
+function safeHTML(text) {
+  return text.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
 }
 
 module.exports = news;
