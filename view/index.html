@@ -20,8 +20,10 @@
   </style>
 </head>
 <body>
-  <pre style="margin: 0 0 1px 0; color: #ccc;">@jiejiss <a href="https://github.com/JieJiSS/wh-2019-ncov-live-status">view code on GitHub</a></pre>
-  <div id="loading"><pre>Loading...<br />This may take several seconds.</pre></div>
+  <pre id="about" style="margin: 0 0 1px 0; color: #ccc; display: none;">@jiejiss <a href="https://github.com/JieJiSS/wh-2019-ncov-live-status">view code on GitHub</a></pre>
+  <div id="loading">
+    <pre>Loading...<br />This may take several seconds.<br/>Data source: 3g.dxy.com</pre>
+  </div>
   <div id="city" style="width: 90vw; height: 90vh;"></div>
   <div style="height: 2%;"></div>
   <div id="prov" style="width: 90vw; height: 90vh;"></div>
@@ -31,6 +33,9 @@
     <pre id="news"></pre>
   </div>
   <script>
+    if(!location.hostname.includes("de2670dd")) {
+      $_("about").style.display = "";
+    }
     window.isMobile = false;
     function $_(id) { return document.getElementById(id); }
     if(window.innerHeight > window.innerWidth) {
