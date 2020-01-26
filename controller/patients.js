@@ -48,7 +48,7 @@ async function patients() {
     })
   }
 
-  cache.add("patients", JSON.stringify(result), (3 * 60 + 10) * 1000);
+  cache.add("patients", JSON.stringify(result), (19 * 60 + 10) * 1000);
 
   return result;
 }

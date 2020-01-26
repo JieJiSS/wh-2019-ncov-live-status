@@ -29,7 +29,7 @@ async function news() {
     result.push(block);
   }
 
-  cache.add("news", JSON.stringify(result), 3 * 60 * 1000);
+  cache.add("news", JSON.stringify(result), 19 * 60 * 1000);
 
   return result;
 }
