@@ -28,6 +28,7 @@
   <div id="loading">
     <pre>Loading...<br />This may take several seconds.<br/>Data source: 3g.dxy.com</pre>
   </div>
+  <div><pre id="info"></pre></div>
   <div id="city" style="width: 90vw; height: 90vh;"></div>
   <div style="height: 2%;"></div>
   <div id="prov" style="width: 90vw; height: 90vh;"></div>
@@ -76,6 +77,17 @@
       var provChart = echarts.init(document.getElementById("prov"));
       var dataTimerId = setInterval(() => {
         if(rawData.length === 0) return;
+        var provinces = rawData.filter(o => o.type === "prov");
+        var totalConfirmed = provinces.reduce((a, b) => a + b.confirmed, 0);
+        var totalSuspect   = provinces.reduce((a, b) => a + b.suspect  , 0);
+        var totalCured     = provinces.reduce((a, b) => a + b.cured    , 0);
+        var totalDead      = provinces.reduce((a, b) => a + b.dead     , 0);
+        var suspectText = "";
+        if(totalSuspect !== 0) {
+          suspectText = `疑似 ${totalSuspect} 例，`;
+        }
+        var info = `总计：确诊 ${totalConfirmed} 例，${suspectText}治愈 ${totalCured} 例，死亡 ${totalDead} 例。`;
+        $_("info").innerText = info;
         perCity(cityChart);
         perProv(provChart);
         $_("loading").innerText = "";
