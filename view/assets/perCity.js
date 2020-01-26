@@ -2562,7 +2562,7 @@ function perCity(chart) {
 			trigger: 'item'
 		},
 		bmap: {
-			center: [ 104.114129, 37.550339 ],
+			center: [ 104.114129, 36.550339 ],
 			zoom: 5,
 			roam: false,
 			mapStyle: {
