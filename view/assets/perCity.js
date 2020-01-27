@@ -1950,7 +1950,6 @@ function perCity(chart) {
 		察哈尔右翼前旗: [ 113.18, 40.78 ],
 		四子王旗: [ 111.68, 41.37 ],
 		达尔罕茂明安联合旗: [ 110.42, 41.72 ],
-		二连浩特: [ 111.96, 43.65 ],
 		阿巴哈纳尔旗: [ 116.08, 43.95 ],
 		多伦: [ 116.48, 42.18 ],
 		阿巴嘎旗: [ 114.97, 44.03 ],
@@ -1963,7 +1962,6 @@ function perCity(chart) {
 		正蓝旗: [ 116.02, 42.25 ],
 		镶黄旗: [ 113.83, 42.25 ],
 		海拉尔: [ 119.73, 29.22 ],
-		满洲里: [ 117.47, 49.58 ],
 		陈巴尔虎旗: [ 119.45, 49.33 ],
 		额尔古纳右旗: [ 120.08, 50.45 ],
 		额尔古纳左旗: [ 121.52, 50.8 ],
@@ -2011,7 +2009,6 @@ function perCity(chart) {
 		阿拉善左旗: [ 105.68, 38.85 ],
 		阿拉善右旗: [ 101.68, 39.2 ],
 		额济纳旗: [ 100.88, 41.9 ],
-		乌兰浩特: [ 122.08, 46.07 ],
 		突泉: [ 121.5, 45.4 ],
 		科尔沁右翼前旗: [ 122.03, 46.12 ],
 		科尔沁右翼中旗: [ 121.47, 45.05 ],
@@ -2273,11 +2270,11 @@ function perCity(chart) {
 		乌兰察布: [ 113.112, 41.022 ],
 		兴安盟: [ 122.048, 46.083 ],
 		呼伦贝尔: [ 119.76, 49.201 ],
-		呼伦贝尔牙克石: [ 120.719208, 49.291085 ],
+		牙克石: [ 120.719208, 49.291085 ],
 		巴彦淖尔: [ 107.423, 40.769 ],
 		鄂尔多斯: [ 109.993, 39.816 ],
-		锡林郭勒盟锡林浩特: [ 116.027, 43.939 ],
-		锡林郭勒: [ 116.027, 43.939 ],
+		锡林浩特: [ 116.027, 43.939 ],
+		锡林郭勒盟: [ 116.027, 43.939 ],
 		阿拉善盟: [ 105.695, 38.843 ],
 		台中: [ 119.337, 26.091 ],
 		台北: [ 114.13, 22.374 ],
@@ -2380,9 +2377,9 @@ function perCity(chart) {
 		潜江: [ 112.904327, 30.409354 ],
 		包头: [ 110.052118, 40.582229 ],
 		鄂尔多斯东胜区: [ 109.971288, 39.827545 ],
-		呼伦贝尔满洲里: [ 117.407857, 49.605966 ],
-		兴安盟乌兰浩特: [ 122.076053, 46.075054 ],
-		锡林郭勒盟二连浩特: [ 111.97044, 43.647548 ],
+		满洲里: [ 117.407857, 49.605966 ],
+		乌兰浩特: [ 122.076053, 46.075054 ],
+		二连浩特: [ 111.97044, 43.647548 ],
 		鄂尔多斯鄂托克前旗: [ 107.485156, 38.186856 ]
 	};
 
@@ -2402,18 +2399,30 @@ function perCity(chart) {
 		for (var i = 0; i < data.length; i++) {
 			if (data[i].deleted) continue;
 
-			data[i].coordName = data[i].name;
+			data[i].displayName = data[i].name;
 			if (/^\S+市\S+区$/.test(data[i].name)) {
-				data[i].coordName = data[i].name.split('市')[0];
+				data[i].displayName = data[i].name.split('市')[0];
+			}
+			if (/^\S+盟\S+特$/.test(data[i].name)) {
+				data[i].displayName = data[i].name.split('盟')[1];
+			}
+			if (/^呼伦贝尔\S+$/.test(data[i].name)) {
+				data[i].displayName = data[i].name.substring(4);
 			}
 
 			for (var k = i + 1; k < data.length; k++) {
-				var coordName = data[k].name;
+				var displayName = data[k].name;
 				if (/^\S+市\S+区$/.test(data[k].name)) {
-					coordName = data[k].name.split('市')[0];
+					displayName = data[k].name.split('市')[0];
+				}
+				if (/^\S+盟\S+特$/.test(data[k].name)) {
+					displayName = data[k].name.split('盟')[1];
+				}
+				if (/^呼伦贝尔\S+$/.test(data[k].name)) {
+					displayName = data[k].name.substring(4);
 				}
 
-				if (data[i].coordName === coordName) {
+				if (data[i].displayName === displayName) {
 					data[i].confirmed += data[k].confirmed;
 					data[i].suspect += data[k].suspect;
 					data[i].cured += data[k].cured;
@@ -2451,7 +2460,7 @@ function perCity(chart) {
 						type: 'city',
 						manual: true,
 						name: '重庆',
-						coordName: '重庆',
+						displayName: '重庆',
 						confirmed: data[i].confirmed,
 						cured: data[i].cured,
 						dead: data[i].dead,
@@ -2473,7 +2482,7 @@ function perCity(chart) {
 									type: 'city',
 									manual: true,
 									name: '重庆',
-									coordName: '重庆',
+									displayName: '重庆',
 									confirmed: rawData[j].confirmed,
 									cured: rawData[j].cured,
 									dead: rawData[j].dead,
@@ -2530,7 +2539,7 @@ function perCity(chart) {
 						type: 'city',
 						manual: true,
 						name: '上海',
-						coordName: '上海',
+						displayName: '上海',
 						confirmed: data[i].confirmed,
 						cured: data[i].cured,
 						dead: data[i].dead,
@@ -2552,7 +2561,7 @@ function perCity(chart) {
 									type: 'city',
 									manual: true,
 									name: '上海',
-									coordName: '上海',
+									displayName: '上海',
 									confirmed: rawData[j].confirmed,
 									cured: rawData[j].cured,
 									dead: rawData[j].dead,
@@ -2666,7 +2675,7 @@ function perCity(chart) {
 						type: 'city',
 						manual: true,
 						name: '天津',
-						coordName: '天津',
+						displayName: '天津',
 						confirmed: data[i].confirmed,
 						cured: data[i].cured,
 						dead: data[i].dead,
@@ -2688,7 +2697,7 @@ function perCity(chart) {
 									type: 'city',
 									manual: true,
 									name: '天津',
-									coordName: '天津',
+									displayName: '天津',
 									confirmed: rawData[j].confirmed,
 									cured: rawData[j].cured,
 									dead: rawData[j].dead,
@@ -2717,18 +2726,18 @@ function perCity(chart) {
 				tianjinVal += data[i].value;
 				continue;
 			}
-			data[i].coordName = data[i].coordName.replace('自治', '');
-			var geoCoord = geoCoordMap[data[i].coordName];
-			if (!geoCoord && /[市县区]$/.test(data[i].coordName)) {
-				geoCoord = geoCoordMap[data[i].coordName.slice(0, -1)];
+			data[i].displayName = data[i].displayName.replace('自治', '');
+			var geoCoord = geoCoordMap[data[i].displayName];
+			if (!geoCoord && /[市县区]$/.test(data[i].displayName)) {
+				geoCoord = geoCoordMap[data[i].displayName.slice(0, -1)];
 			}
 			if (geoCoord) {
 				res.push({
-					name: data[i].coordName,
+					name: data[i].displayName,
 					value: [ geoCoord[0], geoCoord[1], data[i].value, data[i].name ]
 				});
 			} else {
-				console.log(data[i].name, data[i].coordName, '坐标缺失');
+				console.log(data[i].name, data[i].displayName, '坐标缺失');
 			}
 		}
 		geoCoord = geoCoordMap['重庆'];
