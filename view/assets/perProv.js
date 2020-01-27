@@ -12133,7 +12133,6 @@ function perProv(chart) {
 	var avg  = data.reduce((a, b) => a + b.confirmed, 0) / data.length;
 	data = data.map((o) => {
 		o.value = Math.ceil(modifiedSigmoid(o.confirmed / avg) * o.confirmed);
-		console.log(o.confirmed, o.confirmed / avg, modifiedSigmoid(o.confirmed / avg), o.value);
 		return o;
 	});
 
