@@ -1932,7 +1932,6 @@ function perCity(chart) {
 		呼和浩特: [ 111.66, 40.828 ],
 		上默特左旗: [ 111.13, 40.72 ],
 		托克托: [ 111.15, 40.28 ],
-		包头: [ 109.846, 40.647 ],
 		上默特右旗: [ 110.52, 40.55 ],
 		固阳: [ 110.03, 41.03 ],
 		乌海: [ 106.831, 39.683 ],
@@ -2263,7 +2262,8 @@ function perCity(chart) {
 		临沧: [ 100.092, 23.887 ],
 		保山: [ 99.177, 25.12 ],
 		大理白族自治州: [ 100.223, 25.596 ],
-		德宏傣族景颇族自治州: [ 98.589, 24.441 ],
+		德宏州: [ 98.589, 24.441 ],
+		德宏: [ 98.589, 24.441 ],
 		怒江傈僳族自治州: [ 98.859, 25.86 ],
 		文山壮族苗族自治州: [ 104.246, 23.374 ],
 		楚雄彝族自治州: [ 101.529, 25.066 ],
@@ -2276,7 +2276,7 @@ function perCity(chart) {
 		呼伦贝尔牙克石: [ 120.719208, 49.291085 ],
 		巴彦淖尔: [ 107.423, 40.769 ],
 		鄂尔多斯: [ 109.993, 39.816 ],
-		锡林郭勒盟: [ 116.027, 43.939 ],
+		锡林郭勒盟锡林浩特: [ 116.027, 43.939 ],
 		锡林郭勒: [ 116.027, 43.939 ],
 		阿拉善盟: [ 105.695, 38.843 ],
 		台中: [ 119.337, 26.091 ],
@@ -2284,11 +2284,12 @@ function perCity(chart) {
 		台南: [ 121.36, 38.965 ],
 		嘉义: [ 114.246, 22.728 ],
 		高雄: [ 111.59, 21.946 ],
-		延边朝鲜族自治州: [ 129.485, 42.896 ],
+		延边州: [ 129.485, 42.896 ],
+		延边: [ 129.485, 42.896 ],
 		松原: [ 124.832, 45.136 ],
 		白山: [ 126.435, 41.945 ],
 		乐山: [ 103.76, 29.6 ],
-		凉山彝族自治州: [ 102.259, 27.892 ],
+		凉山州: [ 102.259, 27.892 ],
 		南充: [ 106.105, 30.8 ],
 		广元: [ 105.819, 32.441 ],
 		攀枝花: [ 101.722, 26.587 ],
@@ -2296,7 +2297,7 @@ function perCity(chart) {
 		眉山: [ 103.841, 30.061 ],
 		自贡: [ 104.776, 29.359 ],
 		达州: [ 107.494, 31.214 ],
-		阿坝藏族羌族自治州: [ 102.228, 31.905 ],
+		阿坝州: [ 102.228, 31.905 ],
 		亳州: [ 115.787, 33.871 ],
 		池州: [ 117.494, 30.66 ],
 		黄山: [ 118.293, 29.734 ],
@@ -2312,14 +2313,13 @@ function perCity(chart) {
 		防城港: [ 108.351, 21.617 ],
 		伊犁州: [ 81.297, 43.922 ],
 		克孜勒苏柯尔克孜自治州: [ 76.137, 39.75 ],
-		博尔塔拉蒙古自治州: [ 82.052, 44.913 ],
-		吐鲁番地区: [ 89.181, 42.96 ],
+		博尔塔拉州: [ 82.052, 44.913 ],
+		吐鲁番: [ 89.181, 42.96 ],
 		和田地区: [ 79.93, 37.116 ],
 		哈密地区: [ 93.528, 42.858 ],
 		喀什地区: [ 75.992, 39.47 ],
 		塔城地区: [ 82.974, 46.758 ],
-		昌吉回族自治州: [ 87.296, 44.007 ],
-		自治区直辖: [ 85.614, 42.127 ],
+		昌吉州: [ 87.296, 44.007 ],
 		阿克苏地区: [ 80.269, 41.171 ],
 		阿勒泰地区: [ 88.137, 47.839 ],
 		省直辖: [ 112.41, 31.209 ],
@@ -2376,7 +2376,14 @@ function perCity(chart) {
 		天门: [ 113.172984, 30.669621 ],
 		巩义: [ 113.029578, 34.753623 ],
 		儋州: [ 109.58861, 19.52769 ],
-		丽江: [ 100.234762, 26.85911 ]
+		丽江: [ 100.234762, 26.85911 ],
+		潜江: [ 112.904327, 30.409354 ],
+		包头: [ 110.052118, 40.582229 ],
+		鄂尔多斯东胜区: [ 109.971288, 39.827545 ],
+		呼伦贝尔满洲里: [ 117.407857, 49.605966 ],
+		兴安盟乌兰浩特: [ 122.076053, 46.075054 ],
+		锡林郭勒盟二连浩特: [ 111.97044, 43.647548 ],
+		鄂尔多斯鄂托克前旗: [ 107.485156, 38.186856 ]
 	};
 
 	var expo = 0.24;
@@ -2385,19 +2392,66 @@ function perCity(chart) {
 	var wtf = false;
 	var chongqingVal = 0,
 		beijingVal = 0,
-		tianjinVal = 0;
+		tianjinVal = 0,
+		shanghaiVal = 0;
 
 	var convertData = function(data) {
 		var res = [];
 
 		// I hate this part
 		for (var i = 0; i < data.length; i++) {
-			if ([ '万州区', '九龙坡区', '巫山县', '大渡口区', '渝北区', '两江新区', '璧山区', '开州区', '重庆', '重庆市', '江北区' ].includes(data[i].name)) {
+			if (data[i].deleted) continue;
+
+			data[i].coordName = data[i].name;
+			if (/^\S+市\S+区$/.test(data[i].name)) {
+				data[i].coordName = data[i].name.split('市')[0];
+			}
+
+			for (var k = i + 1; k < data.length; k++) {
+				var coordName = data[k].name;
+				if (/^\S+市\S+区$/.test(data[k].name)) {
+					coordName = data[k].name.split('市')[0];
+				}
+
+				if (data[i].coordName === coordName) {
+					data[i].confirmed += data[k].confirmed;
+					data[i].suspect += data[k].suspect;
+					data[i].cured += data[k].cured;
+					data[i].dead += data[k].dead;
+					if (data[i].manual) {
+						// use old name at this point
+						data[i]._actualDesc +=
+							'<div style="padding-left: 1em;">' + data[k].name + ': ' + data[k]._desc + '</div>';
+					} else {
+						data[i]._desc += '<br />' + data[k].name + ': ' + data[k]._desc;
+					}
+					data[k] = { deleted: true };
+				}
+			}
+
+			if (
+				[
+					'万州区',
+					'九龙坡区',
+					'巫山县',
+					'大渡口区',
+					'渝北区',
+					'两江新区',
+					'璧山区',
+					'开州区',
+					'重庆',
+					'重庆市',
+					'江北区',
+					'江津区',
+					'巴南区'
+				].includes(data[i].name)
+			) {
 				if (rawData.filter((o) => o.name === '重庆').length === 0) {
 					rawData.push({
 						type: 'city',
 						manual: true,
 						name: '重庆',
+						coordName: '重庆',
 						confirmed: data[i].confirmed,
 						cured: data[i].cured,
 						dead: data[i].dead,
@@ -2419,6 +2473,7 @@ function perCity(chart) {
 									type: 'city',
 									manual: true,
 									name: '重庆',
+									coordName: '重庆',
 									confirmed: rawData[j].confirmed,
 									cured: rawData[j].cured,
 									dead: rawData[j].dead,
@@ -2445,6 +2500,85 @@ function perCity(chart) {
 					}
 				}
 				chongqingVal += data[i].value;
+				continue;
+			}
+			if (
+				[
+					'外地来沪人员',
+					'黄浦区',
+					'徐汇区',
+					'长宁区',
+					'静安区',
+					'普陀区',
+					'虹口区',
+					'杨浦区',
+					'闵行区',
+					'宝山区',
+					'嘉定区',
+					'浦东新区',
+					'金山区',
+					'松江区',
+					'青浦区',
+					'奉贤区',
+					'崇明区',
+					'上海',
+					'上海市'
+				].includes(data[i].name)
+			) {
+				if (rawData.filter((o) => o.name === '上海').length === 0) {
+					rawData.push({
+						type: 'city',
+						manual: true,
+						name: '上海',
+						coordName: '上海',
+						confirmed: data[i].confirmed,
+						cured: data[i].cured,
+						dead: data[i].dead,
+						suspect: data[i].suspect,
+						get _desc() {
+							return (
+								`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+								this._actualDesc
+							);
+						},
+						value: data[i].value,
+						_actualDesc: ''
+					});
+				} else {
+					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].name === '上海') {
+							if (!rawData[j].manual) {
+								rawData[j] = {
+									type: 'city',
+									manual: true,
+									name: '上海',
+									coordName: '上海',
+									confirmed: rawData[j].confirmed,
+									cured: rawData[j].cured,
+									dead: rawData[j].dead,
+									suspect: rawData[j].suspect,
+									get _desc() {
+										return (
+											`确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this
+												.dead} 例。` + this._actualDesc
+										);
+									},
+									value: rawData[j].value,
+									_actualDesc: ''
+								};
+							}
+							rawData[j].confirmed += data[i].confirmed;
+							rawData[j].cured += data[i].cured;
+							rawData[j].dead += data[i].dead;
+							rawData[j].suspect += data[i].suspect;
+							rawData[j]._actualDesc +=
+								'<div style="padding-left: 1em;">' + data[i].name + ': ' + data[i]._desc + '</div>';
+							rawData[j].value += data[i].value;
+							break;
+						}
+					}
+				}
+				shanghaiVal += data[i].value;
 				continue;
 			}
 			if (data[i].name === '朝阳' && !wtf) {
@@ -2526,12 +2660,13 @@ function perCity(chart) {
 				beijingVal += data[i].value;
 				continue;
 			}
-			if ([ '河北区', '河东区', '外地来津', '滨海新区', '南开区', '西青区', '天津市', '天津' ].includes(data[i].name)) {
+			if ([ '河北区', '河东区', '河西区', '外地来津', '滨海新区', '南开区', '西青区', '天津市', '天津', '红桥区' ].includes(data[i].name)) {
 				if (rawData.filter((o) => o.name === '天津').length === 0) {
 					rawData.push({
 						type: 'city',
 						manual: true,
 						name: '天津',
+						coordName: '天津',
 						confirmed: data[i].confirmed,
 						cured: data[i].cured,
 						dead: data[i].dead,
@@ -2553,6 +2688,7 @@ function perCity(chart) {
 									type: 'city',
 									manual: true,
 									name: '天津',
+									coordName: '天津',
 									confirmed: rawData[j].confirmed,
 									cured: rawData[j].cured,
 									dead: rawData[j].dead,
@@ -2581,34 +2717,39 @@ function perCity(chart) {
 				tianjinVal += data[i].value;
 				continue;
 			}
-			data[i].name = data[i].name.replace('自治', '');
-			var geoCoord = geoCoordMap[data[i].name];
-			if (!geoCoord && /[市县区]$/.test(data[i].name)) {
-				geoCoord = geoCoordMap[data[i].name.slice(0, -1)];
+			data[i].coordName = data[i].coordName.replace('自治', '');
+			var geoCoord = geoCoordMap[data[i].coordName];
+			if (!geoCoord && /[市县区]$/.test(data[i].coordName)) {
+				geoCoord = geoCoordMap[data[i].coordName.slice(0, -1)];
 			}
 			if (geoCoord) {
 				res.push({
-					name: data[i].name,
-					value: [ geoCoord[0], geoCoord[1], data[i].value ]
+					name: data[i].coordName,
+					value: [ geoCoord[0], geoCoord[1], data[i].value, data[i].name ]
 				});
 			} else {
-				console.log(data[i].name, '坐标缺失');
+				console.log(data[i].name, data[i].coordName, '坐标缺失');
 			}
 		}
 		geoCoord = geoCoordMap['重庆'];
 		res.push({
 			name: '重庆',
-			value: [ geoCoord[0], geoCoord[1], chongqingVal ]
+			value: [ geoCoord[0], geoCoord[1], chongqingVal, '重庆' ]
+		});
+		geoCoord = geoCoordMap['上海'];
+		res.push({
+			name: '上海',
+			value: [ geoCoord[0], geoCoord[1], shanghaiVal, '上海' ]
 		});
 		geoCoord = geoCoordMap['天津'];
 		res.push({
 			name: '天津',
-			value: [ geoCoord[0], geoCoord[1], tianjinVal ]
+			value: [ geoCoord[0], geoCoord[1], tianjinVal, '天津' ]
 		});
 		geoCoord = geoCoordMap['北京'];
 		res.push({
 			name: '北京',
-			value: [ geoCoord[0], geoCoord[1], beijingVal ]
+			value: [ geoCoord[0], geoCoord[1], beijingVal, '北京' ]
 		});
 		return res;
 	};
@@ -2750,7 +2891,7 @@ function perCity(chart) {
 				coordinateSystem: 'bmap',
 				data: convertData(data),
 				symbolSize: function(val) {
-					return Math.pow(rate * (val[2] - 1), expo);
+					return Math.max(Math.pow(rate * (val[2] - 1), expo), 5);
 				},
 				label: {
 					formatter: '{b}',
@@ -2769,17 +2910,17 @@ function perCity(chart) {
 				},
 				tooltip: {
 					formatter: function(params) {
-						var obj = rawData.filter((o) => o.type === 'city' && o.name === params.name)[0];
+						var obj = rawData.filter((o) => o.type === 'city' && o.name === params.value[3])[0];
 						var desc = obj._desc;
-						if(window.isMobile) {
-							var result = params.name + ': <br />';
+						if (window.isMobile) {
+							var result = params.value[3] + ': <br />';
 							result += '确诊 ' + obj.confirmed + ' 例，<br />';
-							result += '疑似 ' + obj.suspect   + ' 例，<br />';
-							result += '治愈 ' + obj.cured     + ' 例，<br />';
-							result += '死亡 ' + obj.dead      + ' 例。<br />';
+							result += '疑似 ' + obj.suspect + ' 例，<br />';
+							result += '治愈 ' + obj.cured + ' 例，<br />';
+							result += '死亡 ' + obj.dead + ' 例。<br />';
 							return result;
 						}
-						return params.name + ': ' + desc;
+						return params.value[3] + ': ' + desc;
 					}
 				}
 			},
@@ -2815,8 +2956,8 @@ function perCity(chart) {
 				zlevel: -1,
 				tooltip: {
 					formatter: function(params) {
-						var value = rawData.filter((o) => o.type === 'city' && o.name === params.name)[0]._desc;
-						return params.name + ': ' + value;
+						var value = rawData.filter((o) => o.type === 'city' && o.name === params.value[3])[0]._desc;
+						return params.value[3] + ': ' + value;
 					}
 				}
 			}
