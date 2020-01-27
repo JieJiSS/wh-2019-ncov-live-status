@@ -109,7 +109,8 @@
 
     function writeNews() {
       var node = document.getElementById("news");
-      node.innerHTML = allNews.join("\n".repeat(6));
+      // this is a <pre> node, so we use "\n" instead of "<br />"
+      node.innerHTML = allNews.join("\n".repeat(5));
     }
   </script>
 </body>
