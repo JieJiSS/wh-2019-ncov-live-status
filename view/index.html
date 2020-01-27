@@ -80,10 +80,11 @@
       var dataTimerId = setInterval(() => {
         if(rawData.length === 0) return;
         var provinces = rawData.filter(o => o.type === "prov");
-        var totalConfirmed = provinces.reduce((a, b) => a + b.confirmed, 0);
-        var totalSuspect   = provinces.reduce((a, b) => a + b.suspect  , 0);
-        var totalCured     = provinces.reduce((a, b) => a + b.cured    , 0);
-        var totalDead      = provinces.reduce((a, b) => a + b.dead     , 0);
+        var totalObj  = rawData.filter(o => o.type === "ctry")[0];
+        var totalConfirmed = totalObj.confirmed || provinces.reduce((a, b) => a + b.confirmed, 0);
+        var totalSuspect   = totalObj.suspect   || provinces.reduce((a, b) => a + b.suspect  , 0);
+        var totalCured     = totalObj.cured     || provinces.reduce((a, b) => a + b.cured    , 0);
+        var totalDead      = totalObj.dead      || provinces.reduce((a, b) => a + b.dead     , 0);
         var suspectText = "";
         if(totalSuspect !== 0) {
           suspectText = `疑似 ${totalSuspect} 例，`;

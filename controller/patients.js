@@ -5,24 +5,24 @@ const cheerio = require("cheerio");
 const cache = require("./_cache");
 const source = require("./_source");
 
-// const REGEX = {
-//   "confirmed": /确诊\s*(\d+)\s*例/,
-//   "cured": /治愈\s*(\d+)\s*例/,
-//   "dead": /死亡\s*(\d+)\s*例/,
-//   "suspect": /疑似\s*(\d+)\s*例/,
-// };
+const REGEX = {
+  "confirmed": /确诊\s*(\d+)\s*例/,
+  "cured": /治愈\s*(\d+)\s*例/,
+  "dead": /死亡\s*(\d+)\s*例/,
+  "suspect": /疑似\s*(\d+)\s*例/,
+};
 
-let cityData = [], provData = [];
-let cityText = "[]", provText = "[]";
+let cityData = [], provData = [], totalData = {};
+let cityText = "[]", provText = "[]", totalText = "{}";
 
 async function patients() {
   if(cache.has("patients")) {
     return JSON.parse(cache.get("patients"));
   }
 
-  await updateData();
+  await updatePatientsData();
 
-  const result = [];
+  const result = [ totalData ];
   for(let i = 0; i < cityData.length; i++) {
     const citySet = cityData[i];
     for(let j = 0; j < citySet.cities.length; j++) {
@@ -45,7 +45,7 @@ async function patients() {
       dead: citySet.deadCount,
       suspect: citySet.suspectedCount,
       _desc: generateDescription(citySet),
-    })
+    });
   }
 
   cache.add("patients", JSON.stringify(result), (19 * 60 + 10) * 1000);
@@ -53,15 +53,33 @@ async function patients() {
   return result;
 }
 
-async function updateData() {
+async function updatePatientsData() {
   const html = await source();
-  const $ = cheerio.load(html); // 
+  const $ = cheerio.load(html);
 
+  const totalJsonText = $("#getStatisticsService").html()
+    .trim().replace("try { window.getStatisticsService = ", "").replace("}catch(e){}", "");
   const provJsonText = $("#getListByCountryTypeService1").html()
     .trim().replace("try { window.getListByCountryTypeService1 = ", "").replace("}catch(e){}", "");
   const cityJsonText = $("#getAreaStat").html()
     .trim().replace("try { window.getAreaStat = ", "").replace("}catch(e){}", "");
-  
+
+  if(totalJsonText !== totalText) {
+    const totalDataObj = JSON.parse(totalJsonText);
+
+    const obj = parseRemark(totalDataObj.countRemark);
+    totalData = Object.assign({}, {
+      type: "ctry",
+      name: "总计",
+      confirmed: obj.confirmedCount,
+      cured: obj.curedCount,
+      dead: obj.deadCount,
+      suspect: obj.suspectedCount,
+      _desc: generateDescription(obj),
+    });
+
+    totalText = totalJsonText;
+  }
   if(provJsonText !== provText) {
     provData = JSON.parse(provJsonText);
     provText = provJsonText;
@@ -81,8 +99,25 @@ async function getStatusByProvId(pid) {
   }
 }
 
+function parseRemark(remark) {
+  const text = String(remark || "");
+  const confirmedArr = text.match(REGEX.confirmed);
+  const suspectArr   = text.match(REGEX.suspect  );
+  const curedArr     = text.match(REGEX.cured    );
+  const deadArr      = text.match(REGEX.dead     );
+  const confirmed = Number(confirmedArr[1] || "");
+  const suspect   = Number(suspectArr[1]   || "");
+  const cured     = Number(curedArr[1]     || "");
+  const dead      = Number(deadArr[1]      || "");
+  return {
+    confirmedCount: confirmed,
+    suspectedCount: suspect,
+    curedCount:     cured,
+    deadCount:      dead,
+  };
+}
+
 patients.getStatusByProvId = getStatusByProvId;
-patients.updateData = updateData;
 
 function generateDescription(obj) {
   return `确诊 ${obj.confirmedCount} 例，疑似 ${obj.suspectedCount} 例，` +
