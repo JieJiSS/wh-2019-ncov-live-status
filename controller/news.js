@@ -1,6 +1,5 @@
 // @ts-check
 
-const cheerio = require("cheerio");
 const formatDistanceToNow = require("date-fns/formatDistanceToNow");
 
 const patients = require("./patients");
@@ -15,12 +14,12 @@ async function news() {
   cache.del("patients");
   await patients();  // also update patients cache
 
-  const html = await source();
-  const $ = cheerio.load(html);
+  let json = await source.sourceTimelineJSON();
+  if(!json.data) {
+    json = { data: [] };
+  }
 
-  const jsonText = $("#getTimelineService").html()
-    .trim().replace("try { window.getTimelineService = ", "").replace("}catch(e){}", "");
-  const data = JSON.parse(jsonText).sort((a, b) => b.pubDate - a.pubDate);
+  const data = json.data.sort((a, b) => b.pubDate - a.pubDate).slice(0, 25);
 
   const result = [];
   for(let i = 0; i < data.length; i++) {
@@ -29,7 +28,7 @@ async function news() {
     result.push(block);
   }
 
-  cache.add("news", JSON.stringify(result), 19 * 60 * 1000);
+  cache.add("news", JSON.stringify(result), 14 * 60 * 1000);
 
   return result;
 }

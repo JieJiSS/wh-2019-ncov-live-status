@@ -48,13 +48,13 @@ async function patients() {
     });
   }
 
-  cache.add("patients", JSON.stringify(result), (19 * 60 + 10) * 1000);
+  cache.add("patients", JSON.stringify(result), (14 * 60 + 10) * 1000);
 
   return result;
 }
 
 async function updatePatientsData() {
-  const html = await source();
+  const html = await source.sourceHTML();
   const $ = cheerio.load(html);
 
   const totalJsonText = $("#getStatisticsService").html()

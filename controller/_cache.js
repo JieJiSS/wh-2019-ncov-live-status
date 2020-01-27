@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * @type {Map<string, { value: string; ttl: number; timer: NodeJS.Timeout; }>}
+ * @type {Map<string, { value: any; ttl: number; timer: NodeJS.Timeout; }>}
  */
 const cache = new Map();
 
@@ -14,7 +14,7 @@ function add(name, value, ttl) {
     del(name);
   }, ttl);
 
-  cache.set(name, { value: String(value), ttl: ttl, timer: id });
+  cache.set(name, { value: value, ttl: ttl, timer: id });
 }
 
 function del(name) {
@@ -53,7 +53,7 @@ function upd(name, value, ttl) {
     del(name);
   }, ttl);
 
-  cache.set(name, { value: String(value), ttl: ttl, timer: id });
+  cache.set(name, { value: value, ttl: ttl, timer: id });
 }
 
 module.exports = { add, del, get, has, upd };
