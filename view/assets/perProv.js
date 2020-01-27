@@ -12122,11 +12122,18 @@ echarts.registerMap('China', {
 	]
 });
 
-rate = 25;
+rate = 4;
+
+function modifiedSigmoid(x) {
+	return 1 / (Math.expm1(-x * rate + rate/2) + 2);
+}
 
 function perProv(chart) {
-	var data = rawData.filter((o) => o.type === 'prov').map((o) => {
-		o.value = Math.ceil(rate * Math.log(o.confirmed) / Math.log(16));
+	var data = rawData.filter((o) => o.type === 'prov');
+	var avg  = data.reduce((a, b) => a + b.confirmed, 0) / data.length;
+	data = data.map((o) => {
+		o.value = Math.ceil(modifiedSigmoid(o.confirmed / avg) * o.confirmed);
+		console.log(o.confirmed, o.confirmed / avg, modifiedSigmoid(o.confirmed / avg), o.value);
 		return o;
 	});
 
@@ -12141,12 +12148,12 @@ function perProv(chart) {
 		},
 		visualMap: {
 			min: 0,
-			max: 70,
+			max: 2 * avg,
 			left: 'left',
 			top: 'bottom',
 			text: [ '高', '低' ],
 			inRange: {
-				color: [ '#fffdfd', '#d01111' ]
+				color: [ '#ffffff', '#b61111' ]
 			},
 			show: false
 		},
