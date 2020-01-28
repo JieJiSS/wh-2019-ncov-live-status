@@ -2404,7 +2404,6 @@ function perCity(chart) {
 
 		// I hate this part
 		for (var i = 0; i < data.length; i++) {
-			console.log(i);
 			if (data[i].deleted) continue;
 			if (data[i].name === '朝阳' && !wtf) {
 				wtf = true;
