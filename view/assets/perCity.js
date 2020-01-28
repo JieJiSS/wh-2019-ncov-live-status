@@ -2390,8 +2390,8 @@ function perCity(chart) {
 		公主岭: [ 124.833, 43.511 ]
 	};
 
-	var expo = 0.24;
-	var rate = 1800;
+	var expo = 0.37;
+	var rate = 35;
 
 	var wtf = false;
 	var chongqingVal = 0,
@@ -2677,7 +2677,6 @@ function perCity(chart) {
 							rawData[j].cured += data[i].cured;
 							rawData[j].dead += data[i].dead;
 							rawData[j].suspect += data[i].suspect;
-							console.log(i, data[i].name);
 							rawData[j]._actualDesc +=
 								'<div style="padding-left: 1em;">' + data[i].name + ': ' + data[i]._desc + '</div>';
 							rawData[j].value += data[i].value;
@@ -2824,20 +2823,6 @@ function perCity(chart) {
 						}
 					},
 					{
-						featureType: 'highway',
-						elementType: 'all',
-						stylers: {
-							color: '#fdfdfd'
-						}
-					},
-					{
-						featureType: 'highway',
-						elementType: 'labels',
-						stylers: {
-							visibility: 'off'
-						}
-					},
-					{
 						featureType: 'arterial',
 						elementType: 'geometry',
 						stylers: {
@@ -2859,13 +2844,6 @@ function perCity(chart) {
 						}
 					},
 					{
-						featureType: 'green',
-						elementType: 'all',
-						stylers: {
-							visibility: 'off'
-						}
-					},
-					{
 						featureType: 'subway',
 						elementType: 'all',
 						stylers: {
@@ -2874,13 +2852,6 @@ function perCity(chart) {
 					},
 					{
 						featureType: 'manmade',
-						elementType: 'all',
-						stylers: {
-							color: '#d1d1d1'
-						}
-					},
-					{
-						featureType: 'local',
 						elementType: 'all',
 						stylers: {
 							color: '#d1d1d1'
@@ -2897,14 +2868,7 @@ function perCity(chart) {
 						featureType: 'boundary',
 						elementType: 'all',
 						stylers: {
-							color: '#666666'
-						}
-					},
-					{
-						featureType: 'building',
-						elementType: 'all',
-						stylers: {
-							color: '#d1d1d1'
+							color: '#333333'
 						}
 					},
 					{

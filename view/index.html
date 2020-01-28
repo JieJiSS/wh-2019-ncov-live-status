@@ -44,7 +44,25 @@
       $_("about").style.display = "";
     }
     window.isMobile = false;
-    function $_(id) { return document.getElementById(id); }
+
+    function $_(id) {
+      return document.getElementById(id);
+    }
+    function debounce(func, ms, immediate) {
+      var timeout;
+      return function() {
+        var context = this, args = arguments;
+        var later = function() {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, ms);
+        if (callNow) func.apply(context, args);
+      };
+    };
+
     if(window.innerHeight > window.innerWidth) {
       $_("city").style.height = "45vh";
       $_("city").style.width = "96vw";
@@ -63,20 +81,28 @@
     function update() {
       rawData = [];
       allNews = [];
-      document.body.removeChild(document.getElementById("rawData"));
+      document.body.removeChild($_("rawData"));
       var dataNode = document.createElement("script");
       dataNode.id = "rawData";
       dataNode.src = "/api/patients-jsonp.js?t=" + Date.now();
       document.body.appendChild(dataNode);
 
-      document.body.removeChild(document.getElementById("allNews"));
+      document.body.removeChild($_("allNews"));
       var newsNode = document.createElement("script");
       newsNode.id = "allNews";
       newsNode.src = "/api/news-jsonp.js?t=" + Date.now();
       document.body.appendChild(newsNode);
 
-      var cityChart = echarts.init(document.getElementById("city"));
-      var provChart = echarts.init(document.getElementById("prov"));
+      window.cityChart = echarts.init($_("city"));
+      window.provChart = echarts.init($_("prov"));
+
+      var cityResizeFunc = debounce(cityChart.resize, 200);
+      var provResizeFunc = debounce(provChart.resize, 200);
+      window.addEventListener("resize", () => {
+        cityResizeFunc();
+        provResizeFunc();
+      });
+
       var dataTimerId = setInterval(() => {
         if(rawData.length === 0) return;
         var provinces = rawData.filter(o => o.type === "prov");
@@ -108,7 +134,7 @@
     setInterval(update, 5 * 60 * 1000);
 
     function writeNews() {
-      var node = document.getElementById("news");
+      var node = $_("news");
       // this is a <pre> node, so we use "\n" instead of "<br />"
       node.innerHTML = allNews.join("\n".repeat(5));
     }
