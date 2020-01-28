@@ -19,7 +19,7 @@ async function news() {
     json = { data: [] };
   }
 
-  const data = json.data.sort((a, b) => b.pubDate - a.pubDate).slice(0, 25);
+  const data = json.data.sort((a, b) => b.pubDate - a.pubDate).slice(0, 35);
 
   const result = [];
   for(let i = 0; i < data.length; i++) {
