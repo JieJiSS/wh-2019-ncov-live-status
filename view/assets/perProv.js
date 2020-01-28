@@ -12147,7 +12147,7 @@ function perProv(chart) {
 		},
 		visualMap: {
 			min: 0,
-			max: 2 * avg,
+			max: 1.8 * avg,
 			left: 'left',
 			top: 'bottom',
 			text: [ '高', '低' ],
