@@ -59,6 +59,7 @@ async function updatePatientsData() {
 
   const totalJsonText = $("#getStatisticsService").html()
     .trim().replace("try { window.getStatisticsService = ", "").replace("}catch(e){}", "");
+  console.log(totalJsonText);
   const provJsonText = $("#getListByCountryTypeService1").html()
     .trim().replace("try { window.getListByCountryTypeService1 = ", "").replace("}catch(e){}", "");
   const cityJsonText = $("#getAreaStat").html()
@@ -67,15 +68,14 @@ async function updatePatientsData() {
   if(totalJsonText !== totalText) {
     const totalDataObj = JSON.parse(totalJsonText);
 
-    const obj = parseRemark(totalDataObj.countRemark);
     totalData = Object.assign({}, {
       type: "ctry",
       name: "总计",
-      confirmed: obj.confirmedCount,
-      cured: obj.curedCount,
-      dead: obj.deadCount,
-      suspect: obj.suspectedCount,
-      _desc: generateDescription(obj),
+      confirmed: totalDataObj.confirmedCount,
+      cured: totalDataObj.curedCount,
+      dead: totalDataObj.deadCount,
+      suspect: totalDataObj.suspectedCount,
+      _desc: generateDescription(totalDataObj),
     });
 
     totalText = totalJsonText;
