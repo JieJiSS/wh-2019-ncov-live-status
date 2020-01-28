@@ -2270,7 +2270,7 @@ function perCity(chart) {
 		乌兰察布: [ 113.112, 41.022 ],
 		兴安盟: [ 122.048, 46.083 ],
 		呼伦贝尔: [ 119.76, 49.201 ],
-		牙克石: [ 120.719208, 49.291085 ],
+		牙克石: [ 120.719, 49.291 ],
 		巴彦淖尔: [ 107.423, 40.769 ],
 		鄂尔多斯: [ 109.993, 39.816 ],
 		锡林浩特: [ 116.027, 43.939 ],
@@ -2287,6 +2287,7 @@ function perCity(chart) {
 		白山: [ 126.435, 41.945 ],
 		乐山: [ 103.76, 29.6 ],
 		凉山州: [ 102.259, 27.892 ],
+		凉山: [ 102.259, 27.892 ],
 		南充: [ 106.105, 30.8 ],
 		广元: [ 105.819, 32.441 ],
 		攀枝花: [ 101.722, 26.587 ],
@@ -2357,30 +2358,36 @@ function perCity(chart) {
 		海南州: [ 100.624, 36.284 ],
 		海西州: [ 97.342, 37.373 ],
 		玉树州: [ 97.013, 33.006 ],
+		玉树: [ 97.013, 33.006 ],
 		黄南州: [ 102.007, 35.522 ],
 		新界: [ 114.146, 22.427 ],
 		大兴安岭地区: [ 124.196, 51.991 ],
 		鸡西: [ 130.941, 45.321 ],
-		朝阳区: [ 116.447262, 39.922389 ],
-		海淀: [ 116.306408, 39.9662 ],
-		西城: [ 116.369649, 39.93434 ],
-		东城: [ 116.421966, 39.935226 ],
-		丰台: [ 116.291829, 39.864938 ],
-		通州: [ 116.662263, 39.916019 ],
-		石景山: [ 116.227312, 39.912239 ],
-		仙桃: [ 113.387448, 30.293966 ],
-		重庆: [ 106.556712, 29.568493 ],
-		天门: [ 113.172984, 30.669621 ],
-		巩义: [ 113.029578, 34.753623 ],
-		儋州: [ 109.58861, 19.52769 ],
-		丽江: [ 100.234762, 26.85911 ],
-		潜江: [ 112.904327, 30.409354 ],
-		包头: [ 110.052118, 40.582229 ],
-		鄂尔多斯东胜区: [ 109.971288, 39.827545 ],
-		满洲里: [ 117.407857, 49.605966 ],
-		乌兰浩特: [ 122.076053, 46.075054 ],
-		二连浩特: [ 111.97044, 43.647548 ],
-		鄂尔多斯鄂托克前旗: [ 107.485156, 38.186856 ]
+		朝阳区: [ 116.447, 39.922 ],
+		海淀: [ 116.306, 39.966 ],
+		西城: [ 116.369, 39.934 ],
+		东城: [ 116.421, 39.935 ],
+		丰台: [ 116.291, 39.864 ],
+		通州: [ 116.662, 39.916 ],
+		石景山: [ 116.227, 39.912 ],
+		仙桃: [ 113.387, 30.293 ],
+		重庆: [ 106.556, 29.568 ],
+		天门: [ 113.172, 30.669 ],
+		巩义: [ 113.029, 34.753 ],
+		儋州: [ 109.588, 19.527 ],
+		丽江: [ 100.234, 26.859 ],
+		潜江: [ 112.904, 30.409 ],
+		包头: [ 110.052, 40.582 ],
+		鄂尔多斯东胜区: [ 109.971, 39.827 ],
+		满洲里: [ 117.407, 49.605 ],
+		乌兰浩特: [ 122.076, 46.075 ],
+		二连浩特: [ 111.97, 43.647 ],
+		鄂尔多斯鄂托克前旗: [ 107.485, 38.186 ],
+		神农架林区: [ 110.685, 31.75 ],
+		林西县: [ 118.061, 43.623 ],
+		第七师: [ 84.907, 44.442 ],
+		第八师石河子市: [ 86.092, 44.288 ],
+		公主岭: [ 124.833, 43.511 ]
 	};
 
 	var expo = 0.24;
@@ -2397,11 +2404,19 @@ function perCity(chart) {
 
 		// I hate this part
 		for (var i = 0; i < data.length; i++) {
+			console.log(i);
 			if (data[i].deleted) continue;
+			if (data[i].name === '朝阳' && !wtf) {
+				wtf = true;
+				data[i].name = '朝阳区';
+			}
 
 			data[i].displayName = data[i].name;
 			if (/^\S+市\S+区$/.test(data[i].name)) {
 				data[i].displayName = data[i].name.split('市')[0];
+			}
+			if (/^\S+市\S+县$/.test(data[i].name)) {
+				data[i].displayName = data[i].name.split('市')[1];
 			}
 			if (/^\S+盟\S+特$/.test(data[i].name)) {
 				data[i].displayName = data[i].name.split('盟')[1];
@@ -2414,6 +2429,9 @@ function perCity(chart) {
 				var displayName = data[k].name;
 				if (/^\S+市\S+区$/.test(data[k].name)) {
 					displayName = data[k].name.split('市')[0];
+				}
+				if (/^\S+市\S+县$/.test(data[k].name)) {
+					displayName = data[k].name.split('市')[1];
 				}
 				if (/^\S+盟\S+特$/.test(data[k].name)) {
 					displayName = data[k].name.split('盟')[1];
@@ -2452,7 +2470,8 @@ function perCity(chart) {
 					'重庆市',
 					'江北区',
 					'江津区',
-					'巴南区'
+					'巴南区',
+					'南岸区'
 				].includes(data[i].name)
 			) {
 				if (rawData.filter((o) => o.name === '重庆').length === 0) {
@@ -2476,6 +2495,7 @@ function perCity(chart) {
 					});
 				} else {
 					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].type !== 'city') continue;
 						if (rawData[j].name === '重庆') {
 							if (!rawData[j].manual) {
 								rawData[j] = {
@@ -2514,22 +2534,23 @@ function perCity(chart) {
 			if (
 				[
 					'外地来沪人员',
-					'黄浦区',
-					'徐汇区',
-					'长宁区',
-					'静安区',
-					'普陀区',
-					'虹口区',
-					'杨浦区',
-					'闵行区',
-					'宝山区',
-					'嘉定区',
+					'黄浦',
+					'长宁',
+					'静安',
+					'浦东',
+					'徐汇',
+					'普陀',
+					'虹口',
+					'杨浦',
+					'闵行',
+					'宝山',
+					'嘉定',
 					'浦东新区',
-					'金山区',
-					'松江区',
-					'青浦区',
-					'奉贤区',
-					'崇明区',
+					'金山',
+					'松江',
+					'青浦',
+					'奉贤',
+					'崇明',
 					'上海',
 					'上海市'
 				].includes(data[i].name)
@@ -2555,6 +2576,7 @@ function perCity(chart) {
 					});
 				} else {
 					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].type !== 'city') continue;
 						if (rawData[j].name === '上海') {
 							if (!rawData[j].manual) {
 								rawData[j] = {
@@ -2589,10 +2611,6 @@ function perCity(chart) {
 				}
 				shanghaiVal += data[i].value;
 				continue;
-			}
-			if (data[i].name === '朝阳' && !wtf) {
-				wtf = true;
-				data[i].name = '朝阳区';
 			}
 			if (
 				[
@@ -2635,6 +2653,7 @@ function perCity(chart) {
 					});
 				} else {
 					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].type !== 'city') continue;
 						if (rawData[j].name === '北京') {
 							if (!rawData[j].manual) {
 								rawData[j] = {
@@ -2659,6 +2678,7 @@ function perCity(chart) {
 							rawData[j].cured += data[i].cured;
 							rawData[j].dead += data[i].dead;
 							rawData[j].suspect += data[i].suspect;
+							console.log(i, data[i].name);
 							rawData[j]._actualDesc +=
 								'<div style="padding-left: 1em;">' + data[i].name + ': ' + data[i]._desc + '</div>';
 							rawData[j].value += data[i].value;
@@ -2691,6 +2711,7 @@ function perCity(chart) {
 					});
 				} else {
 					for (var j = 0; j < rawData.length; j++) {
+						if (rawData[j].type !== 'city') continue;
 						if (rawData[j].name === '天津') {
 							if (!rawData[j].manual) {
 								rawData[j] = {
@@ -2763,6 +2784,10 @@ function perCity(chart) {
 		return res;
 	};
 
+	var convertedData = convertData(data).sort((a, b) => {
+		return b.value[2] - a.value[2];
+	});
+
 	var option = {
 		title: {
 			text: '实时疫情地图 - 市级',
@@ -2773,7 +2798,7 @@ function perCity(chart) {
 			trigger: 'item'
 		},
 		bmap: {
-			center: [ 104.114129, 36.550339 ],
+			center: [ 104.114, 36.55 ],
 			zoom: 5,
 			roam: window.isMobile,
 			mapStyle: {
@@ -2898,7 +2923,7 @@ function perCity(chart) {
 				name: 'city',
 				type: 'scatter',
 				coordinateSystem: 'bmap',
-				data: convertData(data),
+				data: convertedData,
 				symbolSize: function(val) {
 					return Math.max(Math.pow(rate * (val[2] - 1), expo), 5);
 				},
@@ -2937,15 +2962,9 @@ function perCity(chart) {
 				name: 'Top 10',
 				type: 'effectScatter',
 				coordinateSystem: 'bmap',
-				data: convertData(
-					data
-						.sort(function(a, b) {
-							return b.value - a.value;
-						})
-						.slice(0, 10)
-				),
+				data: convertedData.slice(0, 10),
 				symbolSize: function(val) {
-					return Math.pow(rate * (val[2] - 1), expo);
+					return Math.max(Math.pow(rate * (val[2] - 1), expo), 5) - 2;
 				},
 				showEffectOn: 'render',
 				rippleEffect: {

@@ -59,7 +59,6 @@ async function updatePatientsData() {
 
   const totalJsonText = $("#getStatisticsService").html()
     .trim().replace("try { window.getStatisticsService = ", "").replace("}catch(e){}", "");
-  console.log(totalJsonText);
   const provJsonText = $("#getListByCountryTypeService1").html()
     .trim().replace("try { window.getListByCountryTypeService1 = ", "").replace("}catch(e){}", "");
   const cityJsonText = $("#getAreaStat").html()
