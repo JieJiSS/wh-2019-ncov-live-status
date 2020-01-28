@@ -36,7 +36,7 @@ async function news() {
 async function generateDescription(post) {
   const publishTime = formatDistanceToNow(post.pubDate, { addSuffix: true });
   const status = await getStatusByProvId(post.provinceId) || "";
-  if(!status) post.provinceName = "海外内容，无统计数据。";
+  if(!status) post.provinceName = "综合内容或海外内容，无统计数据。";
 
   let result = `${safeHTML(post.title)}\n${safeHTML(post.infoSource)} published at ${publishTime}`;
   result += `\n\n${safeHTML(post.summary)}\n\n相关信息：${safeHTML(post.provinceName)} `;
