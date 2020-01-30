@@ -1,14 +1,14 @@
 {
-  "name": "wh-2019-ncov",
+  "name": "wh-2019-ncov-live-status",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"no need to add tests\""
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "JieJiSS <c141028@protonmail.com>",
+  "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "date-fns": "^2.9.0",
