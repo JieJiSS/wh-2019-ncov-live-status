@@ -119,7 +119,8 @@ function parseRemark(remark) {
 patients.getStatusByProvId = getStatusByProvId;
 
 function generateDescription(obj) {
-  return `确诊 ${obj.confirmedCount} 例，疑似 ${obj.suspectedCount} 例，` +
+  const suspectText = obj.suspectedCount ? `疑似 ${obj.suspectedCount} 例，` : "";
+  return `确诊 ${obj.confirmedCount} 例，${suspectText}` +
     `治愈 ${obj.curedCount} 例，死亡 ${obj.deadCount} 例。`;
 }
 

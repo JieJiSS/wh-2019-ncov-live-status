@@ -2484,8 +2484,9 @@ function perCity(chart) {
             dead: data[i].dead,
             suspect: data[i].suspect,
             get _desc() {
+              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
               return (
-                `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
+                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
               );
             },
             value: data[i].value,
@@ -2506,8 +2507,9 @@ function perCity(chart) {
                   dead: rawData[j].dead,
                   suspect: rawData[j].suspect,
                   get _desc() {
+                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
                       this._actualDesc
                     );
                   },
@@ -2564,8 +2566,9 @@ function perCity(chart) {
             dead: data[i].dead,
             suspect: data[i].suspect,
             get _desc() {
+              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
               return (
-                `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
+                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
               );
             },
             value: data[i].value,
@@ -2586,8 +2589,9 @@ function perCity(chart) {
                   dead: rawData[j].dead,
                   suspect: rawData[j].suspect,
                   get _desc() {
+                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
                       this._actualDesc
                     );
                   },
@@ -2640,8 +2644,9 @@ function perCity(chart) {
             dead: data[i].dead,
             suspect: data[i].suspect,
             get _desc() {
+              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
               return (
-                `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
+                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
               );
             },
             value: data[i].value,
@@ -2661,8 +2666,9 @@ function perCity(chart) {
                   dead: rawData[j].dead,
                   suspect: rawData[j].suspect,
                   get _desc() {
+                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
                       this._actualDesc
                     );
                   },
@@ -2696,8 +2702,9 @@ function perCity(chart) {
             dead: data[i].dead,
             suspect: data[i].suspect,
             get _desc() {
+              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
               return (
-                `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
+                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
               );
             },
             value: data[i].value,
@@ -2718,8 +2725,9 @@ function perCity(chart) {
                   dead: rawData[j].dead,
                   suspect: rawData[j].suspect,
                   get _desc() {
+                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，疑似 ${this.suspect} 例，治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
                       this._actualDesc
                     );
                   },
@@ -2908,7 +2916,8 @@ function perCity(chart) {
             if (window.isMobile) {
               var result = params.value[3] + ": <br />";
               result += "确诊 " + obj.confirmed + " 例，<br />";
-              result += "疑似 " + obj.suspect + " 例，<br />";
+              if(obj.suspect)
+                result += "疑似 " + obj.suspect + " 例，<br />";
               result += "治愈 " + obj.cured + " 例，<br />";
               result += "死亡 " + obj.dead + " 例。<br />";
               return result;
@@ -2936,7 +2945,7 @@ function perCity(chart) {
           show: false
         },
         itemStyle: {
-          color: "#ee3333",
+          color: "#de2020",
           shadowBlur: 10,
           shadowColor: "#333"
         },

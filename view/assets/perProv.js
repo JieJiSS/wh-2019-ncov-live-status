@@ -12122,8 +12122,8 @@ function perProv(chart) {
     geo: {
       map: "China",
       roam: false,
-      center: [ 104.114129, 37.550339 ],
-      zoom: 1.8,
+      center: [ 104.114129, 36.050339 ],
+      zoom: 1.7,
       label: {
         normal: {
           show: true,
@@ -12177,7 +12177,8 @@ function perProv(chart) {
                 return result + desc;
               }
               result += "确诊 " + prov.confirmed + " 例，<br />";
-              result += "疑似 " + prov.suspect + " 例，<br />";
+              if(prov.suspect)
+                result += "疑似 " + prov.suspect + " 例，<br />";
               result += "治愈 " + prov.cured + " 例，<br />";
               result += "死亡 " + prov.dead + " 例。<br />";
               return result;
