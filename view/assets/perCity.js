@@ -2325,7 +2325,7 @@ function perCity(chart) {
     舟山: [ 122.169, 30.036 ],
     三亚: [ 109.522, 18.257 ],
     三沙: [ 112.35, 16.84 ],
-    恩施州: [ 109.491, 30.285 ],
+    恩施: [ 109.491, 30.285 ],
     荆州: [ 112.241, 30.332 ],
     襄阳: [ 112.25, 32.229 ],
     鄂州: [ 114.895, 30.384 ],
@@ -2361,7 +2361,7 @@ function perCity(chart) {
     玉树: [ 97.013, 33.006 ],
     黄南州: [ 102.007, 35.522 ],
     新界: [ 114.146, 22.427 ],
-    大兴安岭地区: [ 124.196, 51.991 ],
+    大兴安岭: [ 124.196, 51.991 ],
     鸡西: [ 130.941, 45.321 ],
     朝阳区: [ 116.447, 39.922 ],
     海淀: [ 116.306, 39.966 ],
@@ -2378,20 +2378,20 @@ function perCity(chart) {
     丽江: [ 100.234, 26.859 ],
     潜江: [ 112.904, 30.409 ],
     包头: [ 110.052, 40.582 ],
-    鄂尔多斯东胜区: [ 109.971, 39.827 ],
     满洲里: [ 117.407, 49.605 ],
     乌兰浩特: [ 122.076, 46.075 ],
     二连浩特: [ 111.97, 43.647 ],
-    鄂尔多斯鄂托克前旗: [ 107.485, 38.186 ],
     神农架林区: [ 110.685, 31.75 ],
     林西县: [ 118.061, 43.623 ],
     第七师: [ 84.907, 44.442 ],
-    第八师石河子市: [ 86.092, 44.288 ],
+    第八师: [ 86.092, 44.288 ],
+    第九师: [ 84.21, 46.405 ],
     公主岭: [ 124.833, 43.511 ]
   };
 
   var expo = 0.37;
   var rate = 35;
+  var topCnt = 3;
 
   var wtf = false;
   var chongqingVal = 0,
@@ -2456,6 +2456,7 @@ function perCity(chart) {
 
       if (
         [
+          "沙坪坝区",
           "万州区",
           "九龙坡区",
           "巫山县",
@@ -2485,9 +2486,7 @@ function perCity(chart) {
             suspect: data[i].suspect,
             get _desc() {
               var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return (
-                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-              );
+              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
             },
             value: data[i].value,
             _actualDesc: ""
@@ -2509,8 +2508,7 @@ function perCity(chart) {
                   get _desc() {
                     var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
-                      this._actualDesc
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
                     );
                   },
                   value: rawData[j].value,
@@ -2534,23 +2532,23 @@ function perCity(chart) {
       if (
         [
           "外地来沪人员",
-          "黄浦",
-          "长宁",
-          "静安",
-          "浦东",
-          "徐汇",
-          "普陀",
-          "虹口",
-          "杨浦",
-          "闵行",
-          "宝山",
-          "嘉定",
+          "黄浦区",
+          "长宁区",
+          "静安区",
+          "浦东区",
+          "徐汇区",
+          "普陀区",
+          "虹口区",
+          "杨浦区",
+          "闵行区",
+          "宝山区",
+          "嘉定区",
           "浦东新区",
-          "金山",
-          "松江",
-          "青浦",
-          "奉贤",
-          "崇明",
+          "金山区",
+          "松江区",
+          "青浦区",
+          "奉贤区",
+          "崇明区",
           "上海",
           "上海市"
         ].includes(data[i].name)
@@ -2567,9 +2565,7 @@ function perCity(chart) {
             suspect: data[i].suspect,
             get _desc() {
               var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return (
-                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-              );
+              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
             },
             value: data[i].value,
             _actualDesc: ""
@@ -2591,8 +2587,7 @@ function perCity(chart) {
                   get _desc() {
                     var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
-                      this._actualDesc
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
                     );
                   },
                   value: rawData[j].value,
@@ -2615,23 +2610,23 @@ function perCity(chart) {
       }
       if (
         [
-          "昌平",
-          "大兴",
-          "通州",
-          "东城",
-          "西城",
-          "海淀",
+          "昌平区",
+          "大兴区",
+          "通州区",
+          "东城区",
+          "西城区",
+          "海淀区",
           "朝阳区",
           "外地来京人员",
-          "石景山",
-          "丰台",
-          "顺义",
-          "房山",
-          "门头沟",
-          "平谷",
-          "密云",
-          "怀柔",
-          "延庆"
+          "石景山区",
+          "丰台区",
+          "顺义区",
+          "房山区",
+          "门头沟区",
+          "平谷区",
+          "密云区",
+          "怀柔区",
+          "延庆区"
         ].includes(data[i].name)
       ) {
         if (rawData.filter((o) => o.name === "北京").length === 0) {
@@ -2645,9 +2640,7 @@ function perCity(chart) {
             suspect: data[i].suspect,
             get _desc() {
               var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return (
-                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-              );
+              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
             },
             value: data[i].value,
             _actualDesc: ""
@@ -2668,8 +2661,7 @@ function perCity(chart) {
                   get _desc() {
                     var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
-                      this._actualDesc
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
                     );
                   },
                   value: rawData[j].value,
@@ -2690,7 +2682,11 @@ function perCity(chart) {
         beijingVal += data[i].value;
         continue;
       }
-      if ([ "河北区", "河东区", "河西区", "外地来津", "滨海新区", "南开区", "西青区", "天津市", "天津", "红桥区" ].includes(data[i].name)) {
+      if (
+        [ "外地来津人员", "河北区", "河东区", "河西区", "外地来津", "滨海新区", "南开区", "西青区", "天津市", "天津", "红桥区", "宝坻区", "宁河区" ].includes(
+          data[i].name
+        )
+      ) {
         if (rawData.filter((o) => o.name === "天津").length === 0) {
           rawData.push({
             type: "city",
@@ -2703,9 +2699,7 @@ function perCity(chart) {
             suspect: data[i].suspect,
             get _desc() {
               var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return (
-                `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-              );
+              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
             },
             value: data[i].value,
             _actualDesc: ""
@@ -2727,8 +2721,7 @@ function perCity(chart) {
                   get _desc() {
                     var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
                     return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` +
-                      this._actualDesc
+                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
                     );
                   },
                   value: rawData[j].value,
@@ -2800,7 +2793,7 @@ function perCity(chart) {
       trigger: "item"
     },
     bmap: {
-      center: [ 104.114, 36.55 ],
+      center: [ 104.114, 37.351 ],
       zoom: 5,
       roam: window.isMobile,
       mapStyle: {
@@ -2900,7 +2893,7 @@ function perCity(chart) {
           show: true
         },
         itemStyle: {
-          color: "#ee3333",
+          color: "rgba(237, 50, 50, 1)",
           borderWidth: 1,
           borderColor: "white"
         },
@@ -2916,8 +2909,7 @@ function perCity(chart) {
             if (window.isMobile) {
               var result = params.value[3] + ": <br />";
               result += "确诊 " + obj.confirmed + " 例，<br />";
-              if(obj.suspect)
-                result += "疑似 " + obj.suspect + " 例，<br />";
+              if (obj.suspect) result += "疑似 " + obj.suspect + " 例，<br />";
               result += "治愈 " + obj.cured + " 例，<br />";
               result += "死亡 " + obj.dead + " 例。<br />";
               return result;
@@ -2927,10 +2919,10 @@ function perCity(chart) {
         }
       },
       {
-        name: "Top 10",
+        name: "Top " + topCnt,
         type: "effectScatter",
         coordinateSystem: "bmap",
-        data: convertedData.slice(0, 10),
+        data: convertedData.slice(0, topCnt),
         symbolSize: function(val) {
           return Math.max(Math.pow(rate * (val[2] - 1), expo), 5) - 2;
         },
@@ -2945,17 +2937,11 @@ function perCity(chart) {
           show: false
         },
         itemStyle: {
-          color: "#de2020",
-          shadowBlur: 10,
-          shadowColor: "#333"
+          color: "rgba(206, 30, 30, 0.8)",
+          borderWidth: 1,
+          borderColor: "rgba(255, 255, 255, 0.8)"
         },
-        zlevel: -1,
-        tooltip: {
-          formatter: function(params) {
-            var value = rawData.filter((o) => o.type === "city" && o.name === params.value[3])[0]._desc;
-            return params.value[3] + ": " + value;
-          }
-        }
+        zlevel: -1
       }
     ]
   };
