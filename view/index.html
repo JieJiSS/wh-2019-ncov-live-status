@@ -21,6 +21,12 @@
       word-wrap: break-word;
       font-size: 1.2em;
     }
+    .single-errlog {
+      margin: 4px 0;
+    }
+    .yellow {
+      color: rgb(255, 154, 0);
+    }
   </style>
 </head>
 <body>
@@ -35,6 +41,10 @@
   <div style="height: 2%;"></div>
   <div id="prov" style="width: 90vw; height: 90vh;"></div>
   <div style="height: 2%;"></div>
+  <div id="errlog-wrap" style="word-wrap: break-word; white-space: normal; width: 70vw; display: none;">
+    <pre style="font-weight: bold;">错误提示：</pre>
+    <pre id="errlog"></pre>
+  </div>
   <div id="news-wrap" style="word-wrap: break-word; white-space: normal; width: 70vw;">
     <pre style="font-weight: bold;">疫情新闻速递：</pre>
     <pre id="news"></pre>
@@ -43,7 +53,7 @@
     if(!location.hostname.includes("de2670dd")) {
       $_("about").style.display = "";
     }
-    window.isMobile = false;
+    window.isMobile = window.innerHeight > window.innerWidth;
 
     function $_(id) {
       return document.getElementById(id);
@@ -63,14 +73,57 @@
       };
     };
 
-    if(window.innerHeight > window.innerWidth) {
+    function safeHTML(text) {
+      return text.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
+    }
+
+    function errlog(name, displayName, parentName, desc, reason) {
+      var html = "{n}（简化前：{p} {d}：{desc}）";
+      html = html
+        .replace("{n}", name)
+        .replace("{p}", parentName)
+        .replace("{d}", displayName)
+        .replace("{desc}", desc);
+      
+      if(html.includes("<br />")) {
+        var prefix = "\t".repeat(2);
+        if(window.isMobile) {
+          prefix = " ".repeat(4);
+        }
+        html = html.replace(/<br\s\/>/g, "\n" + prefix + parentName + " ");
+      }
+
+      html = "<span class=\"yellow\">警告：</span>" + safeHTML(html);
+      html += "<span class=\"yellow\">" + safeHTML(reason) + "！</span>";
+
+      var existErrlogs = $_("errlog").querySelectorAll("div");
+
+      for(var i = 0; i < existErrlogs.length; i++) {
+        if(html === existErrlogs[i].innerHTML) {
+          // ignore
+          return;
+        }
+      }
+
+      $_("errlog-wrap").style.display = "";
+
+      var singleErrlogNode = document.createElement("div");
+      singleErrlogNode.className = "single-log";
+
+      var rndId = "id-" + Math.floor(Math.random() * 9e9 + 9e9).toString(36);
+      singleErrlogNode.id = rndId;
+
+      $_("errlog").appendChild(singleErrlogNode);
+      $_(rndId).innerHTML = html;
+    }
+
+    if(window.isMobile) {
       $_("city").style.height = "45vh";
       $_("city").style.width = "96vw";
       $_("prov").style.height = "45vh";
       $_("prov").style.width = "96vw";
       $_("news-wrap").style.fontSize = "1.1em";
       $_("news-wrap").style.width = "96vw";
-      window.isMobile = true;
     }
   </script>
   
@@ -136,7 +189,7 @@
     function writeNews() {
       var node = $_("news");
       // this is a <pre> node, so we use "\n" instead of "<br />"
-      node.innerHTML = allNews.join("\n".repeat(5));
+      node.innerHTML = allNews.join("\n".repeat(2) + "-".repeat(20) + "\n".repeat(2));
     }
   </script>
 </body>

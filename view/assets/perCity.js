@@ -1,8 +1,8 @@
 function perCity(chart) {
-  var data = rawData.filter((o) => o.type === "city").map((o) => {
+  var data = rawData.map((o) => {
     o.value = o.confirmed;
     return o;
-  });
+  }).filter((o) => o.type === "city");
 
   var geoCoordMap = {
     北京: [ 116.395, 39.929 ],
@@ -2325,7 +2325,7 @@ function perCity(chart) {
     舟山: [ 122.169, 30.036 ],
     三亚: [ 109.522, 18.257 ],
     三沙: [ 112.35, 16.84 ],
-    恩施: [ 109.491, 30.285 ],
+    恩施州: [ 109.491, 30.285 ],
     荆州: [ 112.241, 30.332 ],
     襄阳: [ 112.25, 32.229 ],
     鄂州: [ 114.895, 30.384 ],
@@ -2393,11 +2393,118 @@ function perCity(chart) {
   var rate = 35;
   var topCnt = 3;
 
-  var wtf = false;
-  var chongqingVal = 0,
-    beijingVal = 0,
-    tianjinVal = 0,
-    shanghaiVal = 0;
+  var DEFAULT_DESC = "详细信息缺失！";
+
+  var Municipalities = {
+    重庆: {
+      districts: [
+        "沙坪坝区",
+        "万州区",
+        "九龙坡区",
+        "巫山县",
+        "大渡口区",
+        "渝北区",
+        "两江新区",
+        "璧山区",
+        "开州区",
+        "渝中区",
+        "重庆",
+        "重庆市",
+        "江北区",
+        "江津区",
+        "巴南区",
+        "南岸区"
+      ],
+      value: 0
+    },
+    上海: {
+      districts: [
+        "外地来沪人员",
+        "黄浦区",
+        "长宁区",
+        "静安区",
+        "浦东区",
+        "徐汇区",
+        "普陀区",
+        "虹口区",
+        "杨浦区",
+        "闵行区",
+        "宝山区",
+        "嘉定区",
+        "浦东新区",
+        "金山区",
+        "松江区",
+        "青浦区",
+        "奉贤区",
+        "崇明区",
+        "上海",
+        "上海市"
+      ],
+      value: 0
+    },
+    北京: {
+      districts: [
+        "外地来京人员",
+        "昌平区",
+        "大兴区",
+        "通州区",
+        "东城区",
+        "西城区",
+        "海淀区",
+        "朝阳区",
+        "石景山区",
+        "丰台区",
+        "顺义区",
+        "房山区",
+        "门头沟区",
+        "平谷区",
+        "密云区",
+        "怀柔区",
+        "延庆区"
+      ],
+      value: 0
+    },
+    天津: {
+      districts: [
+        "外地来津人员",
+        "河北区",
+        "河东区",
+        "河西区",
+        "外地来津",
+        "滨海新区",
+        "南开区",
+        "西青区",
+        "天津市",
+        "天津",
+        "红桥区",
+        "宝坻区",
+        "宁河区",
+        "东丽区"
+      ],
+      value: 0
+    }
+  };
+
+  var allMunicipalitiesDistricts = [];
+
+  for (var cityName in Municipalities) {
+    var districts = Municipalities[cityName].districts;
+    allMunicipalitiesDistricts = allMunicipalitiesDistricts.concat(districts);
+  }
+
+  function getDisplayName(name) {
+    var displayName = name.replace("自治", "").replace("市", "");
+    if (/^\S+市\S+区$/.test(name)) {
+      displayName = name.split("市")[0];
+    } else if (/^\S+市\S+县$/.test(name)) {
+      displayName = name.split("市")[1];
+    } else if (/^\S+盟\S+特$/.test(name)) {
+      displayName = name.split("盟")[1];
+    } else if (/^呼伦贝尔\S+$/.test(name)) {
+      displayName = name.substring(4);
+    }
+    return displayName;
+  }
 
   var convertData = function(data) {
     var res = [];
@@ -2405,39 +2512,15 @@ function perCity(chart) {
     // I hate this part
     for (var i = 0; i < data.length; i++) {
       if (data[i].deleted) continue;
-      if (data[i].name === "朝阳" && !wtf) {
-        wtf = true;
-        data[i].name = "朝阳区";
+      if (data[i].name === "恩施") {
+        data[i].name = "恩施州";
       }
 
-      data[i].displayName = data[i].name;
-      if (/^\S+市\S+区$/.test(data[i].name)) {
-        data[i].displayName = data[i].name.split("市")[0];
-      }
-      if (/^\S+市\S+县$/.test(data[i].name)) {
-        data[i].displayName = data[i].name.split("市")[1];
-      }
-      if (/^\S+盟\S+特$/.test(data[i].name)) {
-        data[i].displayName = data[i].name.split("盟")[1];
-      }
-      if (/^呼伦贝尔\S+$/.test(data[i].name)) {
-        data[i].displayName = data[i].name.substring(4);
-      }
+      data[i].displayName = getDisplayName(data[i].name);
 
       for (var k = i + 1; k < data.length; k++) {
-        var displayName = data[k].name;
-        if (/^\S+市\S+区$/.test(data[k].name)) {
-          displayName = data[k].name.split("市")[0];
-        }
-        if (/^\S+市\S+县$/.test(data[k].name)) {
-          displayName = data[k].name.split("市")[1];
-        }
-        if (/^\S+盟\S+特$/.test(data[k].name)) {
-          displayName = data[k].name.split("盟")[1];
-        }
-        if (/^呼伦贝尔\S+$/.test(data[k].name)) {
-          displayName = data[k].name.substring(4);
-        }
+        if (data[k].deleted) continue;
+        var displayName = getDisplayName(data[k].name);
 
         if (data[i].displayName === displayName) {
           data[i].confirmed += data[k].confirmed;
@@ -2446,303 +2529,59 @@ function perCity(chart) {
           data[i].dead += data[k].dead;
           if (data[i].manual) {
             // use old name at this point
-            data[i]._actualDesc += '<div style="padding-left: 1em;">' + data[k].name + ": " + data[k]._desc + "</div>";
+            data[i]._actualDesc += '<div style="padding-left: 1em;">' + data[k].name + "：" + data[k]._desc + "</div>";
           } else {
-            data[i]._desc += "<br />" + data[k].name + ": " + data[k]._desc;
+            data[i]._desc += "<br />" + data[k].name + "：" + data[k]._desc;
           }
           data[k] = { deleted: true };
         }
       }
 
-      if (
-        [
-          "沙坪坝区",
-          "万州区",
-          "九龙坡区",
-          "巫山县",
-          "大渡口区",
-          "渝北区",
-          "两江新区",
-          "璧山区",
-          "开州区",
-          "渝中区",
-          "重庆",
-          "重庆市",
-          "江北区",
-          "江津区",
-          "巴南区",
-          "南岸区"
-        ].includes(data[i].name)
-      ) {
-        if (rawData.filter((o) => o.name === "重庆").length === 0) {
-          rawData.push({
-            type: "city",
-            manual: true,
-            name: "重庆",
-            displayName: "重庆",
-            confirmed: data[i].confirmed,
-            cured: data[i].cured,
-            dead: data[i].dead,
-            suspect: data[i].suspect,
-            get _desc() {
-              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
-            },
-            value: data[i].value,
-            _actualDesc: ""
-          });
-        } else {
+      for (var cityName in Municipalities) {
+        var districts = Municipalities[cityName].districts;
+        if (districts.includes(data[i].name)) {
+          // Initialize
           for (var j = 0; j < rawData.length; j++) {
-            if (rawData[j].type !== "city") continue;
-            if (rawData[j].name === "重庆") {
-              if (!rawData[j].manual) {
-                rawData[j] = {
-                  type: "city",
-                  manual: true,
-                  name: "重庆",
-                  displayName: "重庆",
-                  confirmed: rawData[j].confirmed,
-                  cured: rawData[j].cured,
-                  dead: rawData[j].dead,
-                  suspect: rawData[j].suspect,
-                  get _desc() {
-                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-                    return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-                    );
-                  },
-                  value: rawData[j].value,
-                  _actualDesc: ""
-                };
-              }
-              rawData[j].confirmed += data[i].confirmed;
-              rawData[j].cured += data[i].cured;
-              rawData[j].dead += data[i].dead;
-              rawData[j].suspect += data[i].suspect;
-              rawData[j]._actualDesc +=
-                '<div style="padding-left: 1em;">' + data[i].name + ": " + data[i]._desc + "</div>";
-              rawData[j].value += data[i].value;
-              break;
+            if (rawData[j].type !== "prov" || getDisplayName(rawData[j].name) !== cityName) {
+              continue;
             }
+            rawData[j] = {
+              type: "city",
+              manual: true,
+              name: cityName.replace("市", ""),
+              displayName: getDisplayName(cityName),
+              confirmed: rawData[j].confirmed,
+              cured: rawData[j].cured,
+              dead: rawData[j].dead,
+              suspect: rawData[j].suspect,
+              get _desc() {
+                var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
+                return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
+              },
+              value: rawData[j].value,
+              _actualDesc: ""
+            };
+            Municipalities[cityName].value = rawData[j].value;
+            break;
+          }
+
+          // Accumulate
+          for (var j = 0; j < rawData.length; j++) {
+            if (rawData[j].type !== "city" || getDisplayName(rawData[j].name) !== cityName) {
+              continue;
+            }
+            rawData[j]._actualDesc +=
+              '<div style="padding-left: 1em;">' + data[i].name + "：" + data[i]._desc + "</div>";
+            rawData[j].value += data[i].value;
+            break;
           }
         }
-        chongqingVal += data[i].value;
+      }
+
+      if (allMunicipalitiesDistricts.includes(data[i].name)) {
         continue;
       }
-      if (
-        [
-          "外地来沪人员",
-          "黄浦区",
-          "长宁区",
-          "静安区",
-          "浦东区",
-          "徐汇区",
-          "普陀区",
-          "虹口区",
-          "杨浦区",
-          "闵行区",
-          "宝山区",
-          "嘉定区",
-          "浦东新区",
-          "金山区",
-          "松江区",
-          "青浦区",
-          "奉贤区",
-          "崇明区",
-          "上海",
-          "上海市"
-        ].includes(data[i].name)
-      ) {
-        if (rawData.filter((o) => o.name === "上海").length === 0) {
-          rawData.push({
-            type: "city",
-            manual: true,
-            name: "上海",
-            displayName: "上海",
-            confirmed: data[i].confirmed,
-            cured: data[i].cured,
-            dead: data[i].dead,
-            suspect: data[i].suspect,
-            get _desc() {
-              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
-            },
-            value: data[i].value,
-            _actualDesc: ""
-          });
-        } else {
-          for (var j = 0; j < rawData.length; j++) {
-            if (rawData[j].type !== "city") continue;
-            if (rawData[j].name === "上海") {
-              if (!rawData[j].manual) {
-                rawData[j] = {
-                  type: "city",
-                  manual: true,
-                  name: "上海",
-                  displayName: "上海",
-                  confirmed: rawData[j].confirmed,
-                  cured: rawData[j].cured,
-                  dead: rawData[j].dead,
-                  suspect: rawData[j].suspect,
-                  get _desc() {
-                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-                    return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-                    );
-                  },
-                  value: rawData[j].value,
-                  _actualDesc: ""
-                };
-              }
-              rawData[j].confirmed += data[i].confirmed;
-              rawData[j].cured += data[i].cured;
-              rawData[j].dead += data[i].dead;
-              rawData[j].suspect += data[i].suspect;
-              rawData[j]._actualDesc +=
-                '<div style="padding-left: 1em;">' + data[i].name + ": " + data[i]._desc + "</div>";
-              rawData[j].value += data[i].value;
-              break;
-            }
-          }
-        }
-        shanghaiVal += data[i].value;
-        continue;
-      }
-      if (
-        [
-          "昌平区",
-          "大兴区",
-          "通州区",
-          "东城区",
-          "西城区",
-          "海淀区",
-          "朝阳区",
-          "外地来京人员",
-          "石景山区",
-          "丰台区",
-          "顺义区",
-          "房山区",
-          "门头沟区",
-          "平谷区",
-          "密云区",
-          "怀柔区",
-          "延庆区"
-        ].includes(data[i].name)
-      ) {
-        if (rawData.filter((o) => o.name === "北京").length === 0) {
-          rawData.push({
-            type: "city",
-            name: "北京",
-            manual: true,
-            confirmed: data[i].confirmed,
-            cured: data[i].cured,
-            dead: data[i].dead,
-            suspect: data[i].suspect,
-            get _desc() {
-              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
-            },
-            value: data[i].value,
-            _actualDesc: ""
-          });
-        } else {
-          for (var j = 0; j < rawData.length; j++) {
-            if (rawData[j].type !== "city") continue;
-            if (rawData[j].name === "北京") {
-              if (!rawData[j].manual) {
-                rawData[j] = {
-                  type: "city",
-                  manual: true,
-                  name: "北京",
-                  confirmed: rawData[j].confirmed,
-                  cured: rawData[j].cured,
-                  dead: rawData[j].dead,
-                  suspect: rawData[j].suspect,
-                  get _desc() {
-                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-                    return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-                    );
-                  },
-                  value: rawData[j].value,
-                  _actualDesc: ""
-                };
-              }
-              rawData[j].confirmed += data[i].confirmed;
-              rawData[j].cured += data[i].cured;
-              rawData[j].dead += data[i].dead;
-              rawData[j].suspect += data[i].suspect;
-              rawData[j]._actualDesc +=
-                '<div style="padding-left: 1em;">' + data[i].name + ": " + data[i]._desc + "</div>";
-              rawData[j].value += data[i].value;
-              break;
-            }
-          }
-        }
-        beijingVal += data[i].value;
-        continue;
-      }
-      if (
-        [ "外地来津人员", "河北区", "河东区", "河西区", "外地来津", "滨海新区", "南开区", "西青区", "天津市", "天津", "红桥区", "宝坻区", "宁河区" ].includes(
-          data[i].name
-        )
-      ) {
-        if (rawData.filter((o) => o.name === "天津").length === 0) {
-          rawData.push({
-            type: "city",
-            manual: true,
-            name: "天津",
-            displayName: "天津",
-            confirmed: data[i].confirmed,
-            cured: data[i].cured,
-            dead: data[i].dead,
-            suspect: data[i].suspect,
-            get _desc() {
-              var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-              return `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc;
-            },
-            value: data[i].value,
-            _actualDesc: ""
-          });
-        } else {
-          for (var j = 0; j < rawData.length; j++) {
-            if (rawData[j].type !== "city") continue;
-            if (rawData[j].name === "天津") {
-              if (!rawData[j].manual) {
-                rawData[j] = {
-                  type: "city",
-                  manual: true,
-                  name: "天津",
-                  displayName: "天津",
-                  confirmed: rawData[j].confirmed,
-                  cured: rawData[j].cured,
-                  dead: rawData[j].dead,
-                  suspect: rawData[j].suspect,
-                  get _desc() {
-                    var suspectText = this.suspect ? `疑似 ${this.suspect} 例，` : "";
-                    return (
-                      `确诊 ${this.confirmed} 例，${suspectText}治愈 ${this.cured} 例，死亡 ${this.dead} 例。` + this._actualDesc
-                    );
-                  },
-                  value: rawData[j].value,
-                  _actualDesc: ""
-                };
-              }
-              rawData[j].confirmed += data[i].confirmed;
-              rawData[j].cured += data[i].cured;
-              rawData[j].dead += data[i].dead;
-              rawData[j].suspect += data[i].suspect;
-              rawData[j]._actualDesc +=
-                '<div style="padding-left: 1em;">' + data[i].name + ": " + data[i]._desc + "</div>";
-              rawData[j].value += data[i].value;
-              break;
-            }
-          }
-        }
-        tianjinVal += data[i].value;
-        continue;
-      }
-      data[i].displayName = data[i].displayName.replace("自治", "");
+
       var geoCoord = geoCoordMap[data[i].displayName];
       if (!geoCoord && /[市县区]$/.test(data[i].displayName)) {
         geoCoord = geoCoordMap[data[i].displayName.slice(0, -1)];
@@ -2750,38 +2589,53 @@ function perCity(chart) {
       if (geoCoord) {
         res.push({
           name: data[i].displayName,
-          value: [ geoCoord[0], geoCoord[1], data[i].value, data[i].name ]
+          value: [ geoCoord[0], geoCoord[1], data[i].value, data[i].name, data[i].parentName ]
         });
       } else {
-        console.log(data[i].name, data[i].displayName, "坐标缺失");
+        errlog(data[i].name, data[i].displayName, data[i].parentName, data[i]._desc, "坐标缺失");
       }
     }
-    geoCoord = geoCoordMap["重庆"];
-    res.push({
-      name: "重庆",
-      value: [ geoCoord[0], geoCoord[1], chongqingVal, "重庆" ]
-    });
-    geoCoord = geoCoordMap["上海"];
-    res.push({
-      name: "上海",
-      value: [ geoCoord[0], geoCoord[1], shanghaiVal, "上海" ]
-    });
-    geoCoord = geoCoordMap["天津"];
-    res.push({
-      name: "天津",
-      value: [ geoCoord[0], geoCoord[1], tianjinVal, "天津" ]
-    });
-    geoCoord = geoCoordMap["北京"];
-    res.push({
-      name: "北京",
-      value: [ geoCoord[0], geoCoord[1], beijingVal, "北京" ]
-    });
+
+    for (var cityName in Municipalities) {
+      var cityGeoCoord = geoCoordMap[cityName];
+      var value = Municipalities[cityName].value;
+      res.push({
+        name: cityName,
+        value: [ cityGeoCoord[0], cityGeoCoord[1], value, cityName, cityName ]
+      });
+    }
+
     return res;
   };
+
+  function tooltipFormatter(params) {
+    var obj = rawData.filter((o) => o.type === "city" && o.name === params.value[3])[0];
+    if(!obj) {
+      return DEFAULT_DESC;
+    }
+    var desc = obj._desc;
+    if (window.isMobile) {
+      var result = params.value[3] + "：<br />";
+      result += "确诊 " + obj.confirmed + " 例，<br />";
+      if (obj.suspect)
+        result += "疑似 " + obj.suspect + " 例，<br />";
+      result += "治愈 " + obj.cured + " 例，<br />";
+      result += "死亡 " + obj.dead + " 例。<br />";
+      return result;
+    }
+    return params.value[3] + "：" + desc;
+  }
 
   var convertedData = convertData(data).sort((a, b) => {
     return b.value[2] - a.value[2];
   });
+
+  for(var i = 0; i < convertedData.length; i++) {
+    if(tooltipFormatter(convertedData[i]) === DEFAULT_DESC) {
+      var obj = convertedData[i];
+      errlog(obj.value[3], obj.name, obj.value[4], "暂缺", "描述缺失");
+    }
+  }
 
   var option = {
     title: {
@@ -2903,19 +2757,7 @@ function perCity(chart) {
           }
         },
         tooltip: {
-          formatter: function(params) {
-            var obj = rawData.filter((o) => o.type === "city" && o.name === params.value[3])[0];
-            var desc = obj._desc;
-            if (window.isMobile) {
-              var result = params.value[3] + ": <br />";
-              result += "确诊 " + obj.confirmed + " 例，<br />";
-              if (obj.suspect) result += "疑似 " + obj.suspect + " 例，<br />";
-              result += "治愈 " + obj.cured + " 例，<br />";
-              result += "死亡 " + obj.dead + " 例。<br />";
-              return result;
-            }
-            return params.value[3] + ": " + desc;
-          }
+          formatter: tooltipFormatter,
         }
       },
       {

@@ -12172,7 +12172,7 @@ function perProv(chart) {
               name = "台湾地区";
             }
             if (window.isMobile) {
-              var result = name + ": <br />";
+              var result = name + "：<br />";
               if (desc === "暂无数据") {
                 return result + desc;
               }
@@ -12183,7 +12183,7 @@ function perProv(chart) {
               result += "死亡 " + prov.dead + " 例。<br />";
               return result;
             }
-            return name + ": " + desc;
+            return name + "：" + desc;
           }
         }
       }

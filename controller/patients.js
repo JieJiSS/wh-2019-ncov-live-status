@@ -34,6 +34,7 @@ async function patients() {
         cured: city.curedCount,
         dead: city.deadCount,
         suspect: city.suspectedCount,
+        parentName: citySet.provinceName,
         _desc: generateDescription(city),
       });
     }

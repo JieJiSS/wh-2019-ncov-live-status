@@ -5,11 +5,12 @@ const fetch = require("node-fetch");
 const cache = require("./_cache");
 
 const CTX_HTML = "http://3g.dxy.cn/newh5/view/pneumonia";
-const CTX_JSON = "http://file1.dxycdn.com/2020/0127/794/3393185296027391740-115.json?t={time}";
 
 let fetchingHTML = false;
-let fetchingTimelineJSON = false;
 
+/**
+ * @returns {Promise<string>}
+ */
 async function sourceHTML() {
   if(cache.has("html")) {
     return cache.get("html");
@@ -46,51 +47,12 @@ async function sourceHTML() {
   return html || await sourceHTML();
 }
 
-async function sourceTimelineJSON() {
-  if(cache.has("timeline")) {
-    return cache.get("timeline");
-  }
-
-  if(fetchingTimelineJSON) {
-    // avoid fetching repeatedly.
-    while(fetchingTimelineJSON) {
-      await sleep(50);
-    }
-    return cache.get("timeline");
-  }
-
-  let jsonText;
-  let result;
-  try {
-    fetchingTimelineJSON = true;
-    jsonText = await (fetch(CTX_JSON.replace("{time}", Math.floor(Date.now() / 6e4).toString()), {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
-      },
-      timeout: 15000,
-    }).then(res => res.text()));
-    if(jsonText) {
-      const oldResult = result;
-      result = JSON.parse(jsonText);
-      if(result.code !== "success") {
-        result = oldResult;
-      }
-      cache.add("timeline", result, 15 * 60 * 1000);
-      fetchingTimelineJSON = false;
-    }
-  } catch (err) {
-    if(err.name !== "FetchError") {
-      console.error("_source.js failed:", err.name, err.message, err.stack);
-    };
-  }
-
-  return result || await sourceTimelineJSON();
-}
-
+// preload
+sourceHTML();
 function sleep(ms) {
   return new Promise(resolve => {
     setTimeout(resolve, ms);
   });
 }
 
-module.exports = { sourceHTML, sourceTimelineJSON };
+module.exports = { sourceHTML };
