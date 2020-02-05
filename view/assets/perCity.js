@@ -2549,7 +2549,7 @@ function perCity(chart) {
             if (rawData[j].type !== "prov" || getDisplayName(rawData[j].name) !== cityName) {
               continue;
             }
-            rawData[j] = {
+            rawData.push({
               type: "city",
               manual: true,
               name: cityName.replace("市", ""),
@@ -2564,7 +2564,7 @@ function perCity(chart) {
               },
               value: rawData[j].value,
               _actualDesc: ""
-            };
+            });
             Municipalities[cityName].value = rawData[j].value;
             break;
           }

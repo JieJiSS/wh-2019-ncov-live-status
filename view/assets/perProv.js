@@ -12166,9 +12166,6 @@ function perProv(chart) {
         tooltip: {
           formatter: function(params) {
             var prov = rawData.filter((o) => o.type === "prov" && o.name === params.name)[0] || {};
-            if(/^\S+市$/.test(params.name)) {
-              prov = rawData.filter((o) => o.name === params.name)[0] || {};
-            }
             var desc = prov._desc || "暂无数据";
             var name = params.name;
             if (name === "台湾省") {
