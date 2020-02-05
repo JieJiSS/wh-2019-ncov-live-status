@@ -8,10 +8,26 @@ const readFile = promisify(fs.readFile);
 const config = require("./config.json");
 const patients = require("./controller/patients");
 const news = require("./controller/news");
+const verbose = require("./controller/_verbose");
 
 const app = express();
 
 console.log("pid:", process.pid);
+
+
+app.all(/^\S*$/, (req, _, next) => {
+  const d = new Date();
+
+  const dateStr = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+  const timeStr = `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+
+  const tzOffset = d.getTimezoneOffset();
+  const sign = tzOffset < 0 ? "+" : '-';
+  const tzStr = `(UTC${sign}${-tzOffset / 60})`;
+
+  verbose(req.method, req.url, `at: ${dateStr} ${timeStr} ${tzStr}`);
+  next();
+});
 
 app.get("/", async (_, res) => {
   res.set("Content-Type", "text/html");
@@ -21,12 +37,12 @@ app.get("/", async (_, res) => {
   );
 });
 
-app.get("/view/assets/perCity.js", async (_, res) => {
+app.get("/assets/perCity.js", async (_, res) => {
   res.set("Content-Type", "application/javascript");
   res.send(await readFile(path.resolve(path.join(__dirname, "view", "assets", "perCity.js"))));
 });
 
-app.get("/view/assets/perProv.js", async (_, res) => {
+app.get("/assets/perProv.js", async (_, res) => {
   res.set("Content-Type", "application/javascript");
   res.send(await readFile(path.resolve(path.join(__dirname, "view", "assets", "perProv.js"))));
 });
