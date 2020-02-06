@@ -9,6 +9,7 @@ function verbose() {
   }) + " (+8):";
   if(ENABLED) {
     if(arguments.length === 1 && typeof arguments[0] === "object") {
+      console.log("[VERB]", timeStr);
       console.log(obj2table(arguments[0]));
       return;
     }
