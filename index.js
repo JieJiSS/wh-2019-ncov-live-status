@@ -16,6 +16,7 @@ const app = express();
 
 console.log("pid:", process.pid);
 
+verbose(Object.assign(Object.assign({}, baiduMapConfig), controllerConfig));
 
 app.all(/^\S*$/, (req, _, next) => {
   const d = new Date();
