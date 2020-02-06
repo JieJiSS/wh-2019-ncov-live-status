@@ -5,7 +5,7 @@ const verbose = require("./_verbose");
 /**
  * @type {Map<string, { value: any; ttl: number; timer: NodeJS.Timeout; }>}
  */
-const cache = new Map();
+const cacheMap = new Map();
 
 function add(name, value, ttl) {
   if(has(name)) {
@@ -17,7 +17,7 @@ function add(name, value, ttl) {
     del(name);
   }, ttl);
 
-  cache.set(name, { value: value, ttl: ttl, timer: id });
+  cacheMap.set(name, { value: value, ttl: ttl, timer: id });
   verbose(`add(...) at _cache.js: "${name}" was successfully added to cache.`);
 }
 
@@ -27,10 +27,10 @@ function del(name) {
     return;
   }
 
-  const data = cache.get(name);
+  const data = cacheMap.get(name);
 
   clearTimeout(data.timer);
-  cache.delete(name);
+  cacheMap.delete(name);
 
   verbose(`del(...) at _cache.js: "${name}" was successfully deleted from cache.`);
 }
@@ -41,12 +41,12 @@ function get(name) {
     return;
   }
 
-  const data = cache.get(name);
+  const data = cacheMap.get(name);
   return data.value;
 }
 
 function has(name) {
-  return cache.has(name);
+  return cacheMap.has(name);
 }
 
 function upd(name, value, ttl) {
@@ -55,14 +55,14 @@ function upd(name, value, ttl) {
     return add(name, value, ttl);
   }
 
-  const data = cache.get(name);
+  const data = cacheMap.get(name);
   clearTimeout(data.timer);
 
   const id = setTimeout(() => {
     del(name);
   }, ttl);
 
-  cache.set(name, { value: value, ttl: ttl, timer: id });
+  cacheMap.set(name, { value: value, ttl: ttl, timer: id });
   verbose(`upd(...) at _cache.js: "${name}" was successfully updated.`);
 }
 

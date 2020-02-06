@@ -8,6 +8,7 @@ const readFile = promisify(fs.readFile);
 const config = require("./config.json");
 const patients = require("./controller/patients");
 const news = require("./controller/news");
+const source = require("./controller/_source");
 const verbose = require("./controller/_verbose");
 
 const app = express();
@@ -65,6 +66,19 @@ app.get("/api/patients", async (_, res) => {
 app.get("/api/patients-jsonp.js", async (_, res) => {
   res.set("Content-Type", "application/javascript");
   res.send("var rawData = " + JSON.stringify(await patients()));
+});
+
+let lastSource = 0;
+
+app.get("/api/_sourceHTML", async (_, res) => {
+  const now = Date.now();
+  res.set("Content-Type", "application/json");
+  if(now - lastSource < 60 * 1000) {
+    await source.sourceHTML();
+    res.send("success");
+  } else {
+    res.send("too frequent");
+  }
 });
 
 app.listen(3444);

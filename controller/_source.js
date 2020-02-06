@@ -14,7 +14,12 @@ const TIMEOUT = 15 * 1000;
 async function sourceHTML() {
   if(cache.has("html")) {
     verbose("read html from cache");
-    return cache.get("html");
+    if(!cache.get("html")) {
+      console.error("failed: html was incorrectly cached!");
+      cache.del("html");
+    } else {
+      return cache.get("html");
+    }
   }
 
   if(cache.has("fetchingHTML")) {
@@ -23,7 +28,12 @@ async function sourceHTML() {
       verbose("sleep 50ms, to wait for other tick's fetching job to complete.");
       await sleep(50);
     }
-    return cache.get("html");
+    if(!cache.get("html")) {
+      console.error("failed: html was incorrectly cached after fetchingHTML!");
+      cache.del("html");
+    } else {
+      return cache.get("html");
+    }
   }
 
   let html = "";
@@ -50,7 +60,11 @@ async function sourceHTML() {
       return "";
     });
 
-    cache.add("html", html, 15 * 60 * 1000);
+    if(!html) {
+      console.error("failed: failed to fetch html, got a false-like result.");
+    } else {
+      cache.add("html", html, 15 * 60 * 1000);
+    }
   } catch (err) {
     if(err.name !== "FetchError") {
       console.error("_source.js failed:", err.name, err.message, err.stack);
