@@ -10,7 +10,8 @@ function verbose() {
   if(ENABLED) {
     if(arguments.length === 1 && typeof arguments[0] === "object") {
       console.log("[VERB]", timeStr);
-      console.log(obj2table(arguments[0]));
+      const lines = obj2table(arguments[0]).split("\n");
+      console.log(lines.map(line => ["[VERB]", line].join(" ")).join("\n"));
       return;
     }
     console.log.apply(null, ["[VERB]", timeStr].concat(...arguments));

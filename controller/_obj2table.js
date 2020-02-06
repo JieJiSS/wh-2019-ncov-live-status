@@ -153,7 +153,7 @@ function printTable(data) {
   }
 
   result += printRows(rows);
-  return result;
+  return result.trim();
 }
 
 module.exports = printTable;
