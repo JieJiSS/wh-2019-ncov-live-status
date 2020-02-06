@@ -7,6 +7,7 @@ const formatDistanceToNow = require("date-fns/formatDistanceToNow");
 const patients = require("./patients");
 const { getStatusByProvId } = patients;
 const cache = require("./_cache");
+const config = require("./_config");
 const source = require("./_source");
 
 async function news() {
@@ -33,7 +34,7 @@ async function news() {
     result.push(block);
   }
 
-  cache.add("news", JSON.stringify(result), 14 * 60 * 1000);
+  cache.add("news", JSON.stringify(result), config.NEWS_CACHE_TTL);
 
   return result;
 }

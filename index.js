@@ -5,7 +5,8 @@ const { promisify }= require("util");
 
 const readFile = promisify(fs.readFile);
 
-const config = require("./config.json");
+const baiduMapConfig = require("./config.json");
+const controllerConfig = require("./controller/_config");
 const patients = require("./controller/patients");
 const news = require("./controller/news");
 const source = require("./controller/_source");
@@ -26,7 +27,7 @@ app.all(/^\S*$/, (req, _, next) => {
   const sign = tzOffset < 0 ? "+" : '-';
   const tzStr = `(UTC${sign}${-tzOffset / 60})`;
 
-  verbose(req.method, req.url, `at: ${dateStr} ${timeStr} ${tzStr}`);
+  verbose("--->", req.method, req.url, `at: ${dateStr} ${timeStr} ${tzStr}`);
   next();
 });
 
@@ -34,7 +35,7 @@ app.get("/", async (_, res) => {
   res.set("Content-Type", "text/html");
   res.send(
     (await readFile(path.resolve(path.join(__dirname, "view", "index.html"))))
-    .toString().replace("&ak=", `&ak=${config.ak}`)
+    .toString().replace("&ak=", `&ak=${baiduMapConfig.ak}`)
   );
 });
 
@@ -73,11 +74,15 @@ let lastSource = 0;
 app.get("/api/_sourceHTML", async (_, res) => {
   const now = Date.now();
   res.set("Content-Type", "application/json");
-  if(now - lastSource < 60 * 1000) {
-    await source.sourceHTML();
-    res.send("success");
+  if(!controllerConfig.ENABLE_MANUAL_SOURCE) {
+    res.send("forbidden");
   } else {
-    res.send("too frequent");
+    if(now - lastSource < 60 * 1000) {
+      await source.sourceHTML();
+      res.send("success");
+    } else {
+      res.send("too frequent");
+    }
   }
 });
 

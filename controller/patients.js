@@ -3,6 +3,7 @@
 const cheerio = require("cheerio");
 
 const cache = require("./_cache");
+const config = require("./_config");
 const source = require("./_source");
 
 const REGEX = {
@@ -49,7 +50,7 @@ async function patients() {
     });
   }
 
-  cache.add("patients", JSON.stringify(result), (14 * 60 + 10) * 1000);
+  cache.add("patients", JSON.stringify(result), config.PATIENTS_CACHE_TTL);
 
   return result;
 }

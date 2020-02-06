@@ -3,19 +3,21 @@
 const fetch = require("node-fetch");
 
 const cache = require("./_cache");
+const config = require("./_config");
 const verbose = require("./_verbose");
 
-const CTX_HTML = "http://3g.dxy.cn/newh5/view/pneumonia";
-const TIMEOUT = 15 * 1000;
+const CTX_HTML = config.SOURCE_URL;
+const TIMEOUT = config.REQUEST_TIMEOUT;
+const CACHE_TTL = config.HTML_CACHE_TTL;
 
 /**
  * @returns {Promise<string>}
  */
 async function sourceHTML() {
   if(cache.has("html")) {
-    verbose("read html from cache");
+    verbose("sourceHTML(...): read html from cache");
     if(!cache.get("html")) {
-      console.error("failed: html was incorrectly cached!");
+      console.error("sourceHTML(...) failed: html was incorrectly cached!");
       cache.del("html");
     } else {
       return cache.get("html");
@@ -25,11 +27,23 @@ async function sourceHTML() {
   if(cache.has("fetchingHTML")) {
     // avoid fetching repeatedly.
     while(cache.has("fetchingHTML")) {
-      verbose("sleep 50ms, to wait for other tick's fetching job to complete.");
+      verbose("sourceHTML(...): sleep 50ms, to wait for other tick's fetching job to complete.");
       await sleep(50);
     }
+
+    const startTime = Date.now();
+    while(!cache.get("html")) {
+      if(Date.now() - startTime > 1000) {
+        verbose("sourceHTML(...) failed: failed to wait for other tick's caching job!");
+        cache.del("html");
+        return await sourceHTML();
+      }
+      verbose("sourceHTML(...): sleep 50ms, to wait for other tick's caching job to complete.");
+      await sleep(50);
+    }
+
     if(!cache.get("html")) {
-      console.error("failed: html was incorrectly cached after fetchingHTML!");
+      console.error("sourceHTML(...) failed: html was incorrectly cached after fetchingHTML!");
       cache.del("html");
     } else {
       return cache.get("html");
@@ -51,23 +65,23 @@ async function sourceHTML() {
       timeout: TIMEOUT,
     }).then(res => {
       cache.del("fetchingHTML");
-      verbose("successfully fetched html source code.");
+      verbose("sourceHTML(...): successfully fetched html source code.");
       return res.text();
     })).catch(err => {
-      verbose("failed to fetch html source code.");
+      verbose("sourceHTML(...) failed: failed to fetch html source code.");
       console.error(err);
       cache.del("fetchingHTML");
       return "";
     });
 
     if(!html) {
-      console.error("failed: failed to fetch html, got a false-like result.");
+      console.error("sourceHTML(...) failed: failed to fetch html, got a false-like result.");
     } else {
-      cache.add("html", html, 15 * 60 * 1000);
+      cache.add("html", html, CACHE_TTL);
     }
   } catch (err) {
     if(err.name !== "FetchError") {
-      console.error("_source.js failed:", err.name, err.message, err.stack);
+      console.error("sourceHTML(...) failed:", err.name, err.message, err.stack);
     };
 
     cache.del("fetchingHTML");
