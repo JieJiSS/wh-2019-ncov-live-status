@@ -110,7 +110,7 @@ function printRows(rows) {
     consoleLogHook(rowString);
     // Draw border after table header.
     if (!i) {
-      consoleLogHook("├" + repeatString(maxLengthOfFirstColumn - 2, "─") + "┼" + repeatString(tableWidth - maxLengthOfFirstColumn - 1, "─") + "┤");
+      consoleLogHook("├" + firstPart + "┼" + lastPart + "┤");
     }
   }
   consoleLogHook("└" + firstPart + "┴" + lastPart + "┘");
