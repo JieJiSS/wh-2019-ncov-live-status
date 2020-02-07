@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"no need to add tests\""
+    "test": "node test.js"
   },
   "keywords": [],
   "author": "JieJiSS <c141028@protonmail.com>",

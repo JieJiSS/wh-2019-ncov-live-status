@@ -1,3 +1,8 @@
+if(Number(process.versions.node.split(".")[0]) < 8) {
+  console.error("[ERRO]", "Node.js version < 8.0.0 won't be supported.");
+  process.exit(1);
+}
+
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -87,4 +92,5 @@ app.get("/api/_sourceHTML", async (_, res) => {
   }
 });
 
-app.listen(3444);
+app.listen(controllerConfig.PORT);
+console.log("[INFO]", "Now listening on port", controllerConfig.PORT, "...");
