@@ -7,4 +7,6 @@ module.exports = {
   REQUEST_TIMEOUT: 15 * 1000,
 
   ENABLE_MANUAL_SOURCE: false,
+
+  PORT: 3444,
 };

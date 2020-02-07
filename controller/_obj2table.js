@@ -4,7 +4,7 @@ const { format } = require("util");
 
 const EMOJI_REGEX = require("./_emoji").emojiRegex;
 const CJK_REGEX = /[\u{2E80}-\u{2EFF}\u{2F00}-\u{2FDF}\u{2FF0}-\u{2FFF}\u{3000}-\u{303F}\u{31C0}-\u{31EF}\u{3200}-\u{32FF}\u{3400}-\u{4DBF}\u{4E00}-\u{9FFF}\u{20000}-\u{2A6DF}]/u;
-const ALL_REGEXS = [EMOJI_REGEX, CJK_REGEX];
+const FULLWIDTH_REGEXS = [EMOJI_REGEX, CJK_REGEX];
 const SEPARATOR = "│";
 
 /**
@@ -22,16 +22,6 @@ function matchRegexCharsCount(str, regexs) {
     }
   }
   return counter;
-}
-
-/**
- * Repeat provided string a given no. of times.
- * @param  {number} amount Number of times to repeat.
- * @param  {string} str    Character(s) to repeat
- * @return {string}        Repeated string.
- */
-function repeatString(amount, str) {
-  return str.repeat(amount);
 }
 
 /**
@@ -74,7 +64,7 @@ function printRows(rows) {
     let maxLengthForColumn = 0;
     for (let i = 0; i < rows.length; i++) {
       const formattedStr = getFormattedString(rows[i][j], !i || !j);
-      const additionalLength = matchRegexCharsCount(formattedStr, ALL_REGEXS);
+      const additionalLength = matchRegexCharsCount(formattedStr, FULLWIDTH_REGEXS);
       maxLengthForColumn = Math.max(formattedStr.length + additionalLength, maxLengthForColumn);
     }
     // Give some more padding to biggest string.
@@ -87,18 +77,18 @@ function printRows(rows) {
     // Give padding to rows for current column.
     for (let i = 0; i < rows.length; i++) {
       const formattedStr = getFormattedString(rows[i][j], !i || !j);
-      const additionalLength = matchRegexCharsCount(formattedStr, ALL_REGEXS);
+      const additionalLength = matchRegexCharsCount(formattedStr, FULLWIDTH_REGEXS);
       padding = maxLengthForColumn - formattedStr.length - additionalLength;
       // Distribute padding - 1 in starting, rest at the end.
       const offset = j === 0 ? 3 : 2;
-      rows[i][j] = " " + formattedStr + repeatString(padding - offset, " ");
+      rows[i][j] = " " + formattedStr + " ".repeat(padding - offset);
       if (j === 0) {
         rows[i][j] = "│" + rows[i][j];
       }
     }
   }
-  const firstPart = repeatString(maxLengthOfFirstColumn - 2, "─");
-  const lastPart = repeatString(tableWidth - maxLengthOfFirstColumn - 1, "─");
+  const firstPart = "─".repeat(maxLengthOfFirstColumn - 2);
+  const lastPart = "─".repeat(tableWidth - maxLengthOfFirstColumn - 1);
 
   consoleLogHook("┌" + firstPart + "┬" + lastPart + "┐");
   for (let i = 0; i < rows.length; i++) {
@@ -121,14 +111,19 @@ function printRows(rows) {
  * @param {any} data 
  */
 function printTable(data) {
+  if (data === null) {
+    return "null";
+  } else if(data === void 0) {
+    return "undefined";
+  }
+
   let result = "";
 
   function consoleLogHook(str) {
     result += str + "\n";
   }
 
-  let rows = [],
-    row;
+  const rows = [];
 
   // Simply consoleLogHook if an `object` type wasn't passed.
   if (typeof data !== "object") {
@@ -140,7 +135,7 @@ function printTable(data) {
 
   // Create header row.
   rows.push([]);
-  row = rows[rows.length - 1];
+  let row = rows[rows.length - 1];
   row.push("(index)");
   row.push("Values");
 

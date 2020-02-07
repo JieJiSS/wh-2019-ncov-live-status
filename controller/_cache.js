@@ -9,7 +9,7 @@ const cacheMap = new Map();
 
 function add(name, value, ttl) {
   if(has(name)) {
-    verbose(`add(...) at _cache.js: has("${name}") is true. Calling upd(...) ...`);
+    verbose(`add(...): has("${name}") is true. Calling upd(...) ...`);
     return upd(name, value, ttl);
   }
 
@@ -18,12 +18,12 @@ function add(name, value, ttl) {
   }, ttl);
 
   cacheMap.set(name, { value: value, ttl: ttl, timer: id });
-  verbose(`add(...) at _cache.js: "${name}" was successfully added to cache.`);
+  verbose(`add(...): "${name}" was successfully added to cache.`);
 }
 
 function del(name) {
   if(!has(name)) {
-    verbose(`del(...) at _cache.js: "${name}" was already deleted.`);
+    verbose(`del(...): "${name}" was already deleted.`);
     return;
   }
 
@@ -32,12 +32,12 @@ function del(name) {
   clearTimeout(data.timer);
   cacheMap.delete(name);
 
-  verbose(`del(...) at _cache.js: "${name}" was successfully deleted from cache.`);
+  verbose(`del(...): "${name}" was successfully deleted from cache.`);
 }
 
 function get(name) {
   if(!has(name)) {
-    verbose(`get(...) at _cache.js: "${name}" doesn't exist.`);
+    verbose(`get(...): "${name}" doesn't exist.`);
     return;
   }
 
@@ -51,7 +51,7 @@ function has(name) {
 
 function upd(name, value, ttl) {
   if(!has(name)) {
-    verbose(`upd(...) at _cache.js: has("${name}") is false. Calling add(...) ...`);
+    verbose(`upd(...): has("${name}") is false. Calling add(...) ...`);
     return add(name, value, ttl);
   }
 
@@ -63,7 +63,7 @@ function upd(name, value, ttl) {
   }, ttl);
 
   cacheMap.set(name, { value: value, ttl: ttl, timer: id });
-  verbose(`upd(...) at _cache.js: "${name}" was successfully updated.`);
+  verbose(`upd(...): "${name}" was successfully updated.`);
 }
 
 module.exports = { add, del, get, has, upd };
