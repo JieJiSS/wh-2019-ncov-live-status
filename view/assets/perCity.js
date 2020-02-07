@@ -2599,7 +2599,7 @@ function perCity(chart) {
           value: [ geoCoord[0], geoCoord[1], data[i].value, data[i].name, data[i].parentName ]
         });
       } else {
-        errlog(data[i].name, data[i].displayName, data[i].parentName, data[i]._desc, "坐标缺失");
+        errlog(data[i].displayName, data[i].name, data[i].parentName, data[i]._desc, "坐标缺失");
       }
     }
 
